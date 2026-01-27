@@ -1,3 +1,9 @@
+<?php
+include 'components/connect.php';
+session_start();
+$user_id = $_SESSION['user_id'] ?? '';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,16 +31,42 @@
           min-height: 100vh;
       }
 
-      #canvas-bg {
-          position: fixed;
-          top: 0; left: 0; width: 100%; height: 100%;
-          z-index: -1;
-          background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+      /* --- NEW INTRO ANIMATION --- */
+      @keyframes fadeInUp {
+          from {
+              opacity: 0;
+              transform: translateY(30px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
       }
 
       .header-wrapper {
           padding: 100px 8% 60px 8%;
           position: relative;
+          /* Apply animation */
+          animation: fadeInUp 1s ease forwards;
+      }
+
+      .services-grid {
+          display: flex;
+          width: 100%;
+          height: 60vh; 
+          padding: 20px;
+          gap: 15px;
+          /* Apply animation with a slight delay */
+          opacity: 0;
+          animation: fadeInUp 1s ease forwards;
+          animation-delay: 0.3s;
+      }
+
+      #canvas-bg {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          z-index: -1;
+          background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
       }
 
       .header-container {
@@ -81,15 +113,6 @@
           background: rgba(255,255,255,0.02);
       }
 
-      /* --- FUTURISTIC GRID --- */
-      .services-grid {
-          display: flex;
-          width: 100%;
-          height: 60vh; 
-          padding: 20px;
-          gap: 15px;
-      }
-
       .service-card {
           position: relative;
           flex: 1;
@@ -116,7 +139,6 @@
           filter: grayscale(0) brightness(0.6);
       }
 
-      /* Image assignments - Ensure these paths are correct in your local folder */
       .card-1::before { background-image: url('images/dp.jpg'); }
       .card-2::before { background-image: url('images/meta.png'); }
       .card-3::before { background-image: url('images/book3.png'); }
@@ -169,7 +191,6 @@
           .service-card { height: 250px; flex: none; }
       }
 
-      /* --- PAGE TRANSITION --- */
       .transition-swipe {
           position: fixed;
           top: 0; 
@@ -201,38 +222,33 @@
 </div>
 
 <section class="services-grid">
-   <a href="profile.html" class="service-card card-1 transition-link">
+   <a href="profile.php" class="service-card card-1 transition-link">
       <span class="card-number">01</span>
       <div class="card-content"><h3>Profile<br>Data</h3></div>
    </a>
    
-   <a href="project.html" class="service-card card-2 transition-link">
+   <a href="menu.php" class="service-card card-2 transition-link">
       <span class="card-number">02</span>
       <div class="card-content"><h3>Project<br>Logs</h3></div>
    </a>
    
-   <a href="award.html" class="service-card card-3 transition-link">
+   <a href="contact.php" class="service-card card-3 transition-link">
       <span class="card-number">03</span>
       <div class="card-content"><h3>Awards<br>Intel</h3></div>
    </a>
    
-   <a href="gallery.html" class="service-card card-4 transition-link">
+   <a href="about.php" class="service-card card-4 transition-link">
       <span class="card-number">04</span>
       <div class="card-content"><h3>My<br>Gallery</h3></div>
    </a>
 </section>
 
 <script>
-   // --- BACKGROUND ANIMATION ---
+   // Particle background code remains unchanged
    const canvas = document.getElementById('canvas-bg');
    const ctx = canvas.getContext('2d');
    let particles = [];
-
-   function initCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-   }
-
+   function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
    class Particle {
       constructor() {
          this.x = Math.random() * canvas.width;
@@ -242,58 +258,37 @@
          this.speedY = Math.random() * 1 - 0.5;
       }
       update() {
-         this.x += this.speedX;
-         this.y += this.speedY;
-         if (this.x > canvas.width) this.x = 0;
-         if (this.x < 0) this.x = canvas.width;
-         if (this.y > canvas.height) this.y = 0;
-         if (this.y < 0) this.y = canvas.height;
+         this.x += this.speedX; this.y += this.speedY;
+         if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width;
+         if (this.y > canvas.height) this.y = 0; if (this.y < 0) this.y = canvas.height;
       }
       draw() {
          ctx.fillStyle = 'rgba(255, 94, 58, 0.5)';
-         ctx.beginPath();
-         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-         ctx.fill();
+         ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
       }
    }
-
    function createParticles() {
       particles = [];
-      for (let i = 0; i < 80; i++) {
-         particles.push(new Particle());
-      }
+      for (let i = 0; i < 80; i++) { particles.push(new Particle()); }
    }
-
    function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p, index) => {
-         p.update();
-         p.draw();
+         p.update(); p.draw();
          for (let j = index; j < particles.length; j++) {
-            const dx = p.x - particles[j].x;
-            const dy = p.y - particles[j].y;
+            const dx = p.x - particles[j].x; const dy = p.y - particles[j].y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < 150) {
                ctx.strokeStyle = `rgba(255, 94, 58, ${1 - distance/150})`;
-               ctx.lineWidth = 0.5;
-               ctx.beginPath();
-               ctx.moveTo(p.x, p.y);
-               ctx.lineTo(particles[j].x, particles[j].y);
-               ctx.stroke();
+               ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y);
+               ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
             }
          }
       });
       requestAnimationFrame(animate);
    }
-
-   window.addEventListener('resize', () => {
-      initCanvas();
-      createParticles();
-   });
-
-   initCanvas();
-   createParticles();
-   animate();
+   window.addEventListener('resize', () => { initCanvas(); createParticles(); });
+   initCanvas(); createParticles(); animate();
 
    // --- PAGE TRANSITION ---
    document.querySelectorAll('.transition-link').forEach(link => {
@@ -301,12 +296,8 @@
          e.preventDefault();
          const target = this.getAttribute('href');
          const swipe = document.querySelector('.transition-swipe');
-
          swipe.style.left = '0';
-
-         setTimeout(() => {
-            window.location.href = target;
-         }, 550);
+         setTimeout(() => { window.location.href = target; }, 550);
       });
    });
 </script>
