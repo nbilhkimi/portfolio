@@ -27,20 +27,27 @@
           min-height: 100vh;
       }
 
-      /* --- ENTRANCE TRANSITION --- */
+      /* --- ENTRANCE/EXIT TRANSITION --- */
       #entrance-shutter {
           position: fixed;
           top: 0; left: 0;
           width: 100%; height: 100%;
           background: var(--primary-orange);
           z-index: 10000;
+          /* Start fully covering the screen */
           transform: translateX(0);
           transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
           pointer-events: none;
       }
 
+      /* When loaded, slide shutter to the left (revealing page) */
       body.page-loaded #entrance-shutter {
           transform: translateX(-100%);
+      }
+
+      /* When exiting, slide shutter back to center (covering page) */
+      body.page-exiting #entrance-shutter {
+          transform: translateX(0);
       }
 
       #canvas-bg {
@@ -52,13 +59,13 @@
 
       /* --- NAVIGATION --- */
       .nav-hub {
-         position: fixed;
-         top: 0; left: 0; width: 100%;
-         padding: 40px 8%;
-         display: flex;
-         justify-content: flex-start;
-         align-items: center;
-         z-index: 1000;
+          position: fixed;
+          top: 0; left: 0; width: 100%;
+          padding: 40px 8%;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          z-index: 1000;
       }
 
       .home-btn {
@@ -120,7 +127,7 @@
           background: rgba(255,255,255,0.02);
       }
 
-      /* --- PROJECT GRID (FLEX ACCORDION) --- */
+      /* --- PROJECT GRID --- */
       .services-grid {
           display: flex;
           width: 100%;
@@ -221,13 +228,13 @@
       }
    </style>
 </head>
-<body class="loading">
+<body>
 
 <div id="entrance-shutter"></div>
 <canvas id="canvas-bg"></canvas>
 
 <nav class="nav-hub">
-   <a href="index.html" class="home-btn">
+   <a href="index.html" class="home-btn transition-link">
       <i class="fas fa-chevron-left"></i> RETURN_TO_BASE
    </a>
 </nav>
@@ -244,28 +251,28 @@
 </div>
 
 <section class="services-grid">
-   <a href="project-jejak.html" class="service-card card-1">
+   <a href="project-jejak.html" class="service-card card-1 transition-link">
       <span class="card-number">01</span>
       <div class="card-content">
          <img src="images/jejakbelanglogo.png" alt="Jejak Belang" class="project-logo">
       </div>
    </a>
    
-   <a href="project-flaime.html" class="service-card card-2">
+   <a href="project-flaime.html" class="service-card card-2 transition-link">
       <span class="card-number">02</span>
       <div class="card-content">
          <img src="images/flaimelogo.png" alt="Flaime VR" class="project-logo">
       </div>
    </a>
    
-   <a href="project-machinery.html" class="service-card card-3">
+   <a href="project-machinery.html" class="service-card card-3 transition-link">
       <span class="card-number">03</span>
       <div class="card-content">
          <img src="images/machinarylogo.png" alt="VR Machinery" class="project-logo">
       </div>
    </a>
    
-   <a href="project-edurail.html" class="service-card card-4">
+   <a href="project-edurail.html" class="service-card card-4 transition-link">
       <span class="card-number">04</span>
       <div class="card-content">
          <img src="images/logoedurail.png" alt="EduRail" class="project-logo">
@@ -274,11 +281,30 @@
 </section>
 
 <script>
-   // Entrance Animation
+   // Transition Logic
    window.addEventListener('DOMContentLoaded', () => {
+      // Small timeout to ensure browser paints first
       setTimeout(() => {
          document.body.classList.add('page-loaded');
-      }, 100);
+      }, 50);
+
+      // Handle Exit Wipe for links
+      const links = document.querySelectorAll('.transition-link');
+      links.forEach(link => {
+         link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = this.getAttribute('href');
+            
+            // Trigger wipe by adding exit class
+            document.body.classList.remove('page-loaded');
+            document.body.classList.add('page-exiting');
+
+            // Navigate after animation (600ms matches CSS transition)
+            setTimeout(() => {
+               window.location.href = target;
+            }, 600);
+         });
+      });
    });
 
    // Particle Background
