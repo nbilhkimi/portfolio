@@ -1,8 +1,3 @@
-<?php
-// Pure Infographic - No User Session Required
-include 'components/connect.php'; 
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +19,7 @@ include 'components/connect.php';
 
       * { margin: 0; padding: 0; box-sizing: border-box; }
 
-      /* --- ENTRANCE ANIMATION OVERLAY --- */
+      /* --- ENTRANCE ANIMATION --- */
       .page-shutter {
          position: fixed;
          top: 0; left: 0; width: 100%; height: 100%;
@@ -34,9 +29,7 @@ include 'components/connect.php';
          transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
       }
 
-      .page-loaded .page-shutter {
-         transform: translateX(-100%);
-      }
+      .page-loaded .page-shutter { transform: translateX(-100%); }
 
       body { 
          background-color: var(--bg-dark); 
@@ -50,7 +43,6 @@ include 'components/connect.php';
 
       body.page-ready { opacity: 1; }
 
-      /* --- CANVAS BACKGROUND --- */
       #canvas-bg {
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
@@ -58,7 +50,7 @@ include 'components/connect.php';
           background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
       }
 
-      /* --- CONSISTENT NAVIGATION HUB (Transparent) --- */
+      /* --- NAVIGATION --- */
       .nav-hub {
          position: fixed;
          top: 0; left: 0; width: 100%;
@@ -86,20 +78,11 @@ include 'components/connect.php';
          backdrop-filter: blur(5px);
       }
 
-      .home-btn i {
-         color: var(--primary-orange);
-         font-size: 0.8rem;
-         transition: var(--transition);
-      }
-
       .home-btn:hover {
          border-color: var(--primary-orange);
          background: rgba(255, 94, 58, 0.1);
          color: var(--primary-orange);
-         box-shadow: 0 0 20px rgba(255, 94, 58, 0.2);
       }
-
-      .home-btn:hover i { transform: translateX(-5px); }
 
       .btn-download {
          background: var(--primary-orange);
@@ -110,9 +93,8 @@ include 'components/connect.php';
          box-shadow: 0 0 15px var(--neon-glow);
          transition: var(--transition);
       }
-      .btn-download:hover { transform: translateY(-3px); box-shadow: 0 0 25px var(--primary-orange); }
 
-      /* --- CONTENT LAYOUT --- */
+      /* --- CONTENT & CARDS --- */
       .bio-container {
          max-width: 1400px; margin: 0 auto; 
          padding: 180px 8% 100px 8%;
@@ -124,14 +106,9 @@ include 'components/connect.php';
          padding-left: 25px;
       }
 
-      .section-header span {
-         font-family: 'Syncopate'; font-size: 0.8rem; color: var(--primary-orange);
-         letter-spacing: 8px; display: block; margin-bottom: 15px; font-weight: 700;
-      }
-
       .section-header h2 {
          font-family: 'Syncopate'; font-size: clamp(2rem, 5vw, 3.5rem); 
-         text-transform: uppercase; font-weight: 900; letter-spacing: -1px;
+         text-transform: uppercase; font-weight: 900;
       }
 
       .dossier-card {
@@ -141,34 +118,33 @@ include 'components/connect.php';
          position: relative; backdrop-filter: blur(15px);
          opacity: 0; transform: translateY(30px);
          transition: var(--transition);
+         /* FIX: Dynamic Height */
+         height: auto;
+         min-height: min-content;
       }
+
       .dossier-card.reveal { opacity: 1; transform: translateY(0); }
 
       .bio-grid {
          display: grid; grid-template-columns: 320px 1fr; 
-         gap: 60px; align-items: center;
+         gap: 60px; align-items: start;
       }
 
-      .profile-frame {
-         border: 1px solid var(--primary-orange);
-         padding: 15px; background: rgba(255, 94, 58, 0.05);
-      }
-      .profile-frame img { width: 100%; filter: grayscale(1); transition: 0.5s; }
+      .profile-frame img { width: 100%; filter: grayscale(1); transition: 0.5s; border: 1px solid var(--primary-orange); padding: 10px;}
       .dossier-card:hover .profile-frame img { filter: grayscale(0); }
 
-      .objective-text {
-         font-size: 1.1rem; color: #eee; margin-bottom: 30px;
-         border-left: 2px solid var(--primary-orange); padding-left: 25px;
-      }
+      .objective-text { font-size: 1.1rem; color: #eee; margin-bottom: 30px; }
 
       .data-label {
          font-family: 'Syncopate'; font-size: 0.65rem; color: var(--primary-orange);
          letter-spacing: 3px; margin-bottom: 10px; display: block;
       }
 
-      .expertise-grid {
-         display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-         gap: 30px; margin-top: 40px;
+      /* FIX: Experience Spacing */
+      .experience-item {
+         margin-bottom: 35px;
+         padding-bottom: 20px;
+         border-bottom: 1px solid rgba(255,255,255,0.05);
       }
 
       .tag {
@@ -180,14 +156,12 @@ include 'components/connect.php';
 
       #scroll-progress {
          position: fixed; top: 0; left: 0; height: 4px; background: var(--primary-orange);
-         z-index: 2000; width: 0%; box-shadow: 0 0 10px var(--neon-glow);
+         z-index: 2000; width: 0%;
       }
 
       @media (max-width: 900px) {
-         .nav-hub { padding: 20px 8%; flex-direction: column; gap: 15px; align-items: flex-start; }
-         .bio-grid { grid-template-columns: 1fr; text-align: center; }
-         .objective-text { border-left: none; padding-left: 0; }
-         .profile-frame { max-width: 250px; margin: 0 auto; }
+         .bio-grid { grid-template-columns: 1fr; }
+         .dossier-card { padding: 30px; }
       }
    </style>
 </head>
@@ -198,7 +172,7 @@ include 'components/connect.php';
 <div id="scroll-progress"></div>
 
 <nav class="nav-hub">
-   <a href="index.html" class="home-btn transition-link">
+   <a href="index.html" class="home-btn">
       <i class="fas fa-chevron-left"></i> RETURN_TO_BASE
    </a>
    <a href="files/resume.pdf" class="btn-download" download>DOWNLOAD_CV <i class="fas fa-file-download"></i></a>
@@ -206,7 +180,7 @@ include 'components/connect.php';
 
 <main class="bio-container">
    <section class="section-header">
-      <span>IDENT_FILE // 01</span>
+      <span class="data-label">IDENT_FILE // 01</span>
       <h2>Personnel Profile</h2>
    </section>
 
@@ -223,14 +197,14 @@ include 'components/connect.php';
                Combining creativity with deep technical knowledge to architect 
                seamless human-computer interactions.
             </p>
-            <div class="expertise-grid">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                <div>
                   <span class="data-label">ACADEMIC</span>
-                  <p style="font-size: 0.9rem; color: #aaa;">Bachelor of Computer Science and Information Technology (Multimdedia Computing)<br>UTHM | 2022 - 2026</p>
+                  <p style="font-size: 0.9rem; color: #aaa;">Bachelor of Computer Science (Multimedia Computing)<br>UTHM | 2022 - 2026</p>
                </div>
                <div>
-                  <span class="data-label">COMM_INTEL</span>
-                  <p style="font-size: 0.9rem; color: #aaa;">nabilhakimi0415@email.com<br>Johor, Malaysia</p>
+                  <span class="data-label">LOCATION</span>
+                  <p style="font-size: 0.9rem; color: #aaa;">Johor, Malaysia</p>
                </div>
             </div>
          </div>
@@ -238,116 +212,36 @@ include 'components/connect.php';
    </div>
 
    <section class="section-header">
-      <span>TECHNICAL_LOGS // 02</span>
-      <h2>Core Expertise</h2>
+      <span class="data-label">TECHNICAL_LOGS // 02</span>
+      <h2>Experience & Skills</h2>
    </section>
 
    <div class="dossier-card">
-      <div class="technology-expertise">
-         <div>
-            <span class="data-label">I'm familiar with this technologies and tools</span>
-            <div style="margin-top: 15px;">
-               <span class="tag">UNITY_3D</span>
-               <span class="tag">bLENDER_3D</span>
-               <span class="tag">C#_SCRIPT</span>
-               <span class="tag">PHP_8</span>
-               <span class="tag">SQL_DATABASE</span>
-               <span class="tag">Adobe</span>
-               <span class="tag">Visual Studio Code</span>
-               <span class="tag">XR_Integration</span>
-               <span class="tag">Animation</span>
-               <span class="tag">Rigging</span>
-            </div>
-         </div>
-         <div>
-            <span class="data-label"><br>WORK_EXPERIENCE</span>
-            <p style="font-size: 0.85rem; color: #999; margin-top: 15px;">
-               <strong>VR DEVELOPER INTERN (SD GUTHRIE BERHAD)<br>OCT 2025 - JAN 2026</strong><br>
-               Develop a Virtual Reality (VR) application designed to replicate the SD Guthrie Experience Centre and provide users with an immersive simulation of palm oil harvesting...
-            </p>
-             <p style="font-size: 0.85rem; color: #999; margin-top: 15px;">
-               <strong>VR DEVELOPER (UNIVERSITI TUN HUSSEIN ONN MALAYSIA)<br>JUL 2024 - JUL 2025</strong><br>
-               Developed multiple applications such as Virtual Reality application for Faculty of Technical and Vocational Education (FPTV)...
-            </p>
-         </div>
+      <span class="data-label">PROFESSIONAL_PATHWAY</span>
+      
+      <div class="experience-item">
+         <h4 style="color: var(--primary-orange);">VR DEVELOPER INTERN — SD GUTHRIE BERHAD</h4>
+         <small>OCT 2025 - JAN 2026</small>
+         <p style="color: #bbb; margin-top: 10px;">Develop a Virtual Reality (VR) application designed to replicate the SD Guthrie Experience Centre and provide users with an immersive simulation of palm oil harvesting.</p>
+      </div>
+
+      <div class="experience-item">
+         <h4 style="color: var(--primary-orange);">VR DEVELOPER — UTHM</h4>
+         <small>JUL 2024 - JUL 2025</small>
+         <p style="color: #bbb; margin-top: 10px;">Developed multiple applications such as Virtual Reality application for Faculty of Technical and Vocational Education (FPTV).</p>
+      </div>
+
+      <span class="data-label" style="margin-top: 40px;">TECH_STACK</span>
+      <div style="margin-top: 15px;">
+         <span class="tag">UNITY_3D</span> <span class="tag">BLENDER</span> <span class="tag">C#</span> 
+         <span class="tag">PHP</span> <span class="tag">SQL</span> <span class="tag">ADOBE_CC</span>
+         <span class="tag">XR_INTERACTION</span> <span class="tag">RIGGING</span>
       </div>
    </div>
 </main>
 
 <script>
-   // Particle Background Engine
-   const canvas = document.getElementById('canvas-bg');
-   const ctx = canvas.getContext('2d');
-   let particles = [];
-
-   function initCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-   }
-
-   class Particle {
-      constructor() {
-         this.x = Math.random() * canvas.width;
-         this.y = Math.random() * canvas.height;
-         this.size = Math.random() * 2 + 1;
-         this.speedX = Math.random() * 1 - 0.5;
-         this.speedY = Math.random() * 1 - 0.5;
-      }
-      update() {
-         this.x += this.speedX;
-         this.y += this.speedY;
-         if (this.x > canvas.width) this.x = 0;
-         if (this.x < 0) this.x = canvas.width;
-         if (this.y > canvas.height) this.y = 0;
-         if (this.y < 0) this.y = canvas.height;
-      }
-      draw() {
-         ctx.fillStyle = 'rgba(255, 94, 58, 0.5)';
-         ctx.beginPath();
-         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-         ctx.fill();
-      }
-   }
-
-   function createParticles() {
-      particles = [];
-      for (let i = 0; i < 80; i++) {
-         particles.push(new Particle());
-      }
-   }
-
-   function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p, index) => {
-         p.update();
-         p.draw();
-         for (let j = index; j < particles.length; j++) {
-            const dx = p.x - particles[j].x;
-            const dy = p.y - particles[j].y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < 150) {
-               ctx.strokeStyle = `rgba(255, 94, 58, ${1 - distance/150})`;
-               ctx.lineWidth = 0.5;
-               ctx.beginPath();
-               ctx.moveTo(p.x, p.y);
-               ctx.lineTo(particles[j].x, particles[j].y);
-               ctx.stroke();
-            }
-         }
-      });
-      requestAnimationFrame(animate);
-   }
-
-   window.addEventListener('resize', () => {
-      initCanvas();
-      createParticles();
-   });
-
-   initCanvas();
-   createParticles();
-   animate();
-
-   // Reveal and Scroll logic
+   // Particle Engine & Reveal Logic (Simplified for stability)
    window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
          document.body.classList.add('page-loaded');
@@ -357,21 +251,44 @@ include 'components/connect.php';
 
    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-         if (entry.isIntersecting) {
-            entry.target.classList.add('reveal');
-         }
+         if (entry.isIntersecting) entry.target.classList.add('reveal');
       });
    }, { threshold: 0.1 });
-
    document.querySelectorAll('.dossier-card').forEach(card => observer.observe(card));
 
-   window.onscroll = function() {
-      let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+   // Scroll Progress
+   window.onscroll = () => {
+      let winScroll = document.documentElement.scrollTop;
       let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      let scrolled = (winScroll / height) * 100;
-      document.getElementById("scroll-progress").style.width = scrolled + "%";
+      document.getElementById("scroll-progress").style.width = (winScroll / height) * 100 + "%";
    };
-</script>
 
+   // Particles (Static for efficiency)
+   const canvas = document.getElementById('canvas-bg');
+   const ctx = canvas.getContext('2d');
+   let particles = [];
+   function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+   class P {
+      constructor() {
+         this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height;
+         this.vx = Math.random()-0.5; this.vy = Math.random()-0.5;
+      }
+      draw() {
+         this.x+=this.vx; this.y+=this.vy;
+         if(this.x<0||this.x>canvas.width)this.vx*=-1;
+         if(this.y<0||this.y>canvas.height)this.vy*=-1;
+         ctx.fillStyle = 'rgba(255,94,58,0.3)';
+         ctx.beginPath(); ctx.arc(this.x,this.y,1.5,0,Math.PI*2); ctx.fill();
+      }
+   }
+   for(let i=0;i<60;i++) particles.push(new P());
+   function loop() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => p.draw());
+      requestAnimationFrame(loop);
+   }
+   initCanvas(); loop();
+   window.onresize = initCanvas;
+</script>
 </body>
 </html>
