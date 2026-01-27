@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Portfolio | Nabil Nur Hakimi</title>
+   
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
+   
+   <style>
+      :root {
+          --primary-orange: #ff5e3a; 
+          --neon-glow: rgba(255, 94, 58, 0.6);
+          --bg-dark: #0a0a0a;
+          --card-bg: rgba(20, 20, 20, 0.7);
+          --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      body { 
+          background-color: var(--bg-dark); 
+          color: #fff;
+          font-family: 'Poppins', sans-serif;
+          overflow-x: hidden;
+          min-height: 100vh;
+      }
+
+      /* --- ENTRANCE TRANSITION --- */
+      #entrance-shutter {
+          position: fixed;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: var(--primary-orange);
+          z-index: 10000;
+          transform: translateX(0);
+          transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+          pointer-events: none;
+      }
+
+      body.page-loaded #entrance-shutter {
+          transform: translateX(-100%);
+      }
+
+      #canvas-bg {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          z-index: -1;
+          background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+      }
+
+      /* --- NAVIGATION --- */
+      .nav-hub {
+         position: fixed;
+         top: 0; left: 0; width: 100%;
+         padding: 40px 8%;
+         display: flex;
+         justify-content: flex-start;
+         align-items: center;
+         z-index: 1000;
+      }
+
+      .home-btn {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          text-decoration: none;
+          color: #fff;
+          font-family: 'Syncopate', sans-serif;
+          font-size: 0.7rem;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          padding: 10px 20px;
+          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.02);
+          transition: var(--transition);
+          backdrop-filter: blur(5px);
+      }
+
+      .home-btn:hover {
+          border-color: var(--primary-orange);
+          background: rgba(255, 94, 58, 0.1);
+          color: var(--primary-orange);
+          box-shadow: 0 0 20px rgba(255, 94, 58, 0.2);
+      }
+
+      /* --- HEADER --- */
+      .header-wrapper {
+          padding: 160px 8% 60px 8%;
+          position: relative;
+      }
+
+      .header-container {
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr; 
+          gap: 40px;
+          max-width: 1400px;
+          margin: 0 auto;
+          align-items: center;
+      }
+
+      .title-side h1 {
+          font-size: clamp(3rem, 8vw, 6.5rem);
+          font-weight: 900;
+          line-height: 0.9;
+          text-transform: uppercase;
+          letter-spacing: -2px;
+          font-family: 'Syncopate', sans-serif;
+          color: #fff;
+      }
+
+      .description-side p {
+          font-size: 1rem;
+          line-height: 1.8;
+          color: #aaa;
+          border-left: 2px solid var(--primary-orange); 
+          padding: 20px 25px;
+          backdrop-filter: blur(5px);
+          background: rgba(255,255,255,0.02);
+      }
+
+      /* --- PROJECT GRID (FLEX ACCORDION) --- */
+      .services-grid {
+          display: flex;
+          width: 100%;
+          height: 60vh; 
+          padding: 0 8% 40px 8%;
+          gap: 15px;
+      }
+
+      .service-card {
+          position: relative;
+          flex: 1;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px;
+          text-decoration: none;
+          transition: var(--transition);
+          border-radius: 4px;
+          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--card-bg);
+          backdrop-filter: blur(10px);
+      }
+
+      .service-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background-size: cover;
+          background-position: center;
+          transition: var(--transition);
+          z-index: 1;
+          opacity: 0.4;
+          filter: brightness(0.5);
+      }
+
+      .card-1::before { background-image: url('images/jejakbelang1.png'); }
+      .card-2::before { background-image: url('images/meta.png'); }
+      .card-3::before { background-image: url('images/book3.png'); }
+      .card-4::before { background-image: url('images/edurail1.png'); }
+
+      .service-card:hover {
+          flex: 2.5;
+          border-color: var(--primary-orange);
+          box-shadow: 0 0 30px var(--neon-glow);
+      }
+
+      .service-card:hover::before {
+          opacity: 0.8;
+          filter: brightness(1);
+          transform: scale(1.05);
+      }
+
+      .card-content {
+          position: relative;
+          z-index: 4;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: var(--transition);
+      }
+
+      .project-logo {
+          max-width: 85%;
+          max-height: 140px;
+          object-fit: contain;
+          filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+          transition: var(--transition);
+      }
+
+      .service-card:hover .project-logo {
+          transform: scale(1.1);
+          filter: drop-shadow(0 0 20px var(--neon-glow));
+      }
+
+      .card-number {
+          position: absolute;
+          top: 20px; left: 20px;
+          font-size: 4rem;
+          font-weight: 900;
+          opacity: 0.1;
+          font-family: 'Syncopate', sans-serif;
+          color: #fff;
+          z-index: 3;
+          transition: var(--transition);
+      }
+
+      .service-card:hover .card-number {
+          opacity: 0.4;
+          color: var(--primary-orange);
+      }
+
+      @media (max-width: 900px) {
+          .services-grid { flex-direction: column; height: auto; }
+          .service-card { height: 280px; flex: none; }
+          .project-logo { max-height: 100px; }
+      }
+   </style>
+</head>
+<body class="loading">
+
+<div id="entrance-shutter"></div>
+<canvas id="canvas-bg"></canvas>
+
+<nav class="nav-hub">
+   <a href="index.html" class="home-btn">
+      <i class="fas fa-chevron-left"></i> RETURN_TO_BASE
+   </a>
+</nav>
+
+<div class="header-wrapper">
+   <section class="header-container">
+      <div class="title-side">
+          <h1>MY<br>PROJECTS</h1>
+      </div>
+      <div class="description-side">
+          <p>Strategic deployment of multimedia assets and Unity-based architectures. Accessing interactive project logs.</p>
+      </div>
+   </section>
+</div>
+
+<section class="services-grid">
+   <a href="project-jejak.html" class="service-card card-1">
+      <span class="card-number">01</span>
+      <div class="card-content">
+         <img src="images/jejakbelanglogo.png" alt="Jejak Belang" class="project-logo">
+      </div>
+   </a>
+   
+   <a href="project-flaime.html" class="service-card card-2">
+      <span class="card-number">02</span>
+      <div class="card-content">
+         <img src="images/flaimelogo.png" alt="Flaime VR" class="project-logo">
+      </div>
+   </a>
+   
+   <a href="project-machinery.html" class="service-card card-3">
+      <span class="card-number">03</span>
+      <div class="card-content">
+         <img src="images/machinarylogo.png" alt="VR Machinery" class="project-logo">
+      </div>
+   </a>
+   
+   <a href="project-edurail.html" class="service-card card-4">
+      <span class="card-number">04</span>
+      <div class="card-content">
+         <img src="images/logoedurail.png" alt="EduRail" class="project-logo">
+      </div>
+   </a>
+</section>
+
+<script>
+   // Entrance Animation
+   window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+         document.body.classList.add('page-loaded');
+      }, 100);
+   });
+
+   // Particle Background
+   const canvas = document.getElementById('canvas-bg');
+   const ctx = canvas.getContext('2d');
+   let particles = [];
+   function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+   
+   class Particle {
+      constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = Math.random() * 0.8 - 0.4;
+          this.speedY = Math.random() * 0.8 - 0.4;
+      }
+      update() {
+          this.x += this.speedX; this.y += this.speedY;
+          if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+          if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+      }
+      draw() {
+          ctx.fillStyle = 'rgba(255, 94, 58, 0.4)';
+          ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+      }
+   }
+
+   function createParticles() {
+      particles = [];
+      for (let i = 0; i < 80; i++) { particles.push(new Particle()); }
+   }
+
+   function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+          p.update(); p.draw();
+          for (let j = index; j < particles.length; j++) {
+             const dx = p.x - particles[j].x; const dy = p.y - particles[j].y;
+             const dist = Math.sqrt(dx * dx + dy * dy);
+             if (dist < 150) {
+                ctx.strokeStyle = `rgba(255, 94, 58, ${0.15 - dist/1000})`;
+                ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y);
+                ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+             }
+          }
+      });
+      requestAnimationFrame(animate);
+   }
+
+   window.addEventListener('resize', initCanvas);
+   initCanvas(); createParticles(); animate();
+</script>
+
+</body>
+</html>
