@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Achievements | Nabil Nur Hakimi</title>
+   
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+
+   <style>
+      :root {
+          --primary-orange: #ff5e3a;
+          --bg-dark: #0a0a0a;
+          --glass: rgba(255, 255, 255, 0.03);
+          --transition-long: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      body { 
+          background-color: var(--bg-dark); 
+          color: #fff; 
+          font-family: 'Poppins', sans-serif; 
+          overflow-x: hidden; 
+      }
+
+      /* --- BACKGROUND ENGINE --- */
+      #canvas-bg {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          z-index: -1;
+          background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+      }
+
+      /* --- SCROLL PROGRESS --- */
+      #scroll-progress {
+          position: fixed; top: 0; left: 0; height: 3px;
+          background: var(--primary-orange); z-index: 10001; width: 0%;
+          box-shadow: 0 0 10px var(--primary-orange);
+      }
+
+      /* --- ENTRANCE SWIPE --- */
+      #entrance-wipe {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: var(--primary-orange); z-index: 10000;
+          animation: wipeOut 0.6s forwards cubic-bezier(0.4, 0, 0.2, 1);
+          pointer-events: none;
+      }
+      @keyframes wipeOut { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+      /* --- CONSISTENT NAVIGATION --- */
+      .nav-hub {
+         position: fixed;
+         top: 0; left: 0; width: 100%;
+         padding: 40px 8%;
+         display: flex;
+         justify-content: flex-start;
+         z-index: 1000;
+      }
+
+      .home-btn {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          text-decoration: none;
+          color: #fff;
+          font-family: 'Syncopate', sans-serif;
+          font-size: 0.7rem;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          padding: 10px 20px;
+          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.02);
+          transition: var(--transition);
+          backdrop-filter: blur(5px);
+      }
+
+      .home-btn i {
+          color: var(--primary-orange);
+          font-size: 0.8rem;
+          transition: var(--transition);
+      }
+
+      .home-btn:hover {
+          border-color: var(--primary-orange);
+          background: rgba(255, 94, 58, 0.1);
+          color: var(--primary-orange);
+          box-shadow: 0 0 20px rgba(255, 94, 58, 0.2);
+      }
+
+      .home-btn:hover i { transform: translateX(-5px); }
+
+      /* --- HERO SECTION --- */
+      .editorial-container {
+          max-width: 1400px; margin: 180px auto 100px auto; padding: 0 8%;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 50px;
+          align-items: center; min-height: 80vh;
+      }
+      .label-top { font-family: 'Syncopate', sans-serif; color: var(--primary-orange); font-size: 0.8rem; letter-spacing: 4px; display: block; margin-bottom: 20px; }
+      .main-headline { 
+          font-family: 'Syncopate', sans-serif; font-size: 4.5rem; font-weight: 700; line-height: 1.1; 
+          text-transform: uppercase; margin-bottom: 40px; color: #fff;
+      }
+
+      /* Dossier Collage */
+      .collage-side { position: relative; height: 600px; }
+      .img-frame { position: absolute; border: 1px solid rgba(255,255,255,0.1); background: #000; transition: var(--transition-long); }
+      .img-frame::before { content: "DATA_REC"; position: absolute; top: 10px; left: 10px; font-size: 8px; font-family: 'Syncopate'; color: var(--primary-orange); z-index: 5; }
+      
+      .frame-main { width: 80%; height: 80%; top: 0; left: 0; z-index: 1; border: 1px solid rgba(255,94,58,0.5); }
+      .frame-top { width: 45%; height: 40%; top: -10%; right: -5%; z-index: 2; border: 4px solid var(--bg-dark); }
+      .frame-bottom { width: 50%; height: 45%; bottom: -5%; right: 5%; z-index: 3; border: 4px solid var(--bg-dark); }
+      .img-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 1s; }
+      .img-frame:hover img { opacity: 1; filter: saturate(1.2); }
+
+      /* --- MARQUEE --- */
+      .section-divider {
+          position: relative; width: 100%; padding: 25px 0; margin: 80px 0; overflow: hidden; z-index: 5;
+      }
+      .section-divider::before, .section-divider::after {
+          content: ""; position: absolute; left: 0; width: 100%; height: 1px;
+          background: linear-gradient(90deg, transparent, var(--primary-orange), transparent); opacity: 0.3;
+      }
+      .section-divider::before { top: 0; }
+      .section-divider::after { bottom: 0; }
+
+      .marquee-wrapper { display: flex; white-space: nowrap; animation: marquee 35s linear infinite; }
+      .marquee-text {
+          font-family: 'Syncopate', sans-serif; font-size: 1.5rem; font-weight: 700;
+          color: rgba(255,255,255,0.06); padding-right: 120px; letter-spacing: 8px; text-transform: uppercase;
+      }
+      .marquee-text span { color: var(--primary-orange); text-shadow: 0 0 15px rgba(255, 94, 58, 0.4); }
+
+      @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+      /* --- ZIGZAG DOSSIER --- */
+      .achievements-section { max-width: 1400px; margin: 0 auto; padding: 100px 8%; }
+      .zigzag-row {
+          display: grid; grid-template-columns: 1fr 1fr; gap: 100px;
+          align-items: center; margin-bottom: 250px; opacity: 0;
+          transform: translateY(50px); transition: var(--transition-long);
+      }
+      .zigzag-row.reveal { opacity: 1; transform: translateY(0); }
+      
+      .zigzag-row:nth-child(even) .zig-text { order: 2; border-left: 0; border-right: 1px solid rgba(255,94,58,0.3); padding-right: 40px; text-align: right; }
+      .zigzag-row:nth-child(even) .zig-collage { order: 1; }
+
+      .zig-text { border-left: 1px solid rgba(255,94,58,0.3); padding-left: 40px; }
+      .zig-text span { font-family: 'Syncopate', sans-serif; font-size: 5rem; color: rgba(255, 255, 255, 0.03); display: block; margin-bottom: -20px; }
+      .zig-text h2 { font-family: 'Syncopate', sans-serif; font-size: 1.8rem; line-height: 1.2; margin-bottom: 25px; color: var(--primary-orange); }
+      .zig-text p { color: #aaa; line-height: 1.6; font-size: 0.95rem; }
+
+      .zig-collage { position: relative; height: 450px; }
+      .mini-frame { position: absolute; border: 1px solid rgba(255,255,255,0.1); background: #000; overflow: hidden; }
+      .mini-1 { width: 80%; height: 90%; left: 0; top: 0; z-index: 1; }
+      .mini-2 { width: 50%; height: 50%; right: -5%; top: 10%; z-index: 2; border: 4px solid var(--bg-dark); }
+      .mini-3 { width: 40%; height: 40%; right: 10%; bottom: -10%; z-index: 3; border: 4px solid var(--bg-dark); }
+      .mini-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; filter: grayscale(0); transition: 0.5s; }
+      .mini-frame:hover img { opacity: 1; filter: grayscale(0); }
+
+      @media (max-width: 1000px) {
+          .nav-hub { padding: 20px 8%; }
+          .editorial-container, .zigzag-row { grid-template-columns: 1fr; gap: 50px; }
+          .main-headline { font-size: 3rem; }
+          .zigzag-row:nth-child(even) .zig-text { text-align: left; border-right: 0; border-left: 1px solid var(--primary-orange); padding-left: 40px; }
+      }
+   </style>
+</head>
+<body>
+
+<canvas id="canvas-bg"></canvas>
+<div id="scroll-progress"></div>
+<div id="entrance-wipe"></div>
+
+<nav class="nav-hub">
+   <a href="index.html" class="home-btn">
+      <i class="fas fa-chevron-left"></i> RETURN_TO_BASE
+   </a>
+</nav>
+
+<main class="editorial-container">
+   <section class="content-side">
+      <span class="label-top">// SYSTEM_DOSSIER: 2026</span>
+      <h1 class="main-headline">Achievements<br>and Awards</h1>
+      <p style="color: #666; font-family: 'Syncopate'; font-size: 0.7rem; border-left: 2px solid var(--primary-orange); padding-left: 15px; letter-spacing: 2px;">
+          "Precision is the foundation of every masterpiece."
+      </p>
+   </section>
+
+   <section class="collage-side">
+      <div class="img-frame frame-main"><img src="images/pixel.jpg"></div>
+      <div class="img-frame frame-top"><img src="images/cradle.jpg"></div>
+      <div class="img-frame frame-bottom"><img src="images/rise1.jpg"></div>
+   </section>
+</main>
+
+<div class="section-divider">
+   <div class="marquee-wrapper">
+      <div class="marquee-text">// ARCHIVE_LOG: <span>DICE 3.0</span> &bull; PIXEL IT25 &bull; DBP 2025 <span>RISE 2025</span> &bull; DATA_STREAM_ACTIVE &bull;</div>
+      <div class="marquee-text">// ARCHIVE_LOG: <span>DICE 3.0</span> &bull; PIXEL IT25 &bull; DBP 2025 <span>RISE 2025</span> &bull; DATA_STREAM_ACTIVE &bull;</div>
+   </div>
+</div>
+
+<section class="achievements-section">
+   <div class="zigzag-row">
+      <div class="zig-text">
+         <span>01</span>
+         <h2>1ST PLACE: <br>DICE 3.0 AR/VR</h2>
+         <p>Led development for an immersive AR/VR project. Ranked 1st out of 64 international teams. Recognized in the Malaysia Book of Records for innovation excellence.</p>
+      </div>
+      <div class="zig-collage">
+         <div class="mini-frame mini-1"><img src="images/dice.jpg"></div>
+         <div class="mini-frame mini-2"><img src="images/cradle.jpg"></div>
+         <div class="mini-frame mini-3"><img src="images/dice1.jpg"></div>
+      </div>
+   </div>
+
+   <div class="zigzag-row">
+      <div class="zig-text">
+         <span>02</span>
+         <h2>GOLD_AWARD: <br>RISE COMPETITION 2025</h2>
+         <p>Awarded for technical research excellence by UTHM. Focus on advanced information systems and digital intelligence integration at the International level.</p>
+      </div>
+      <div class="zig-collage">
+         <div class="mini-frame mini-1"><img src="images/rise1.jpg"></div>
+         <div class="mini-frame mini-2"><img src="images/rise2.jpg"></div>
+         <div class="mini-frame mini-3"><img src="images/rise3.jpg"></div>
+      </div>
+   </div>
+   
+   <div class="zigzag-row">
+      <div class="zig-text">
+         <span>03</span>
+         <h2>BEST_PRODUCT: <br>MULTIMEDIA COMPUTING</h2>
+         <p>Top-tier recognition for Final Year Project (PSM) at the PIXEL Showcase. Distinguished for technical architecture and UX design among the 2026 cohort.</p>
+      </div>
+      <div class="zig-collage">
+         <div class="mini-frame mini-1"><img src="images/pixel.jpg"></div>
+         <div class="mini-frame mini-2"><img src="images/pixel4.jpg"></div>
+         <div class="mini-frame mini-3"><img src="images/pixel3.jpg"></div>
+      </div>
+   </div>
+
+   <div class="zigzag-row">
+      <div class="zig-text">
+         <span>04</span>
+         <h2>CHAMPION: <br>DBP DIGITAL PANTUN 2025</h2>
+         <p>Innovative digitalization of cultural heritage through modern media platforms. Awarded by Dewan Bahasa dan Pustaka (DBP).</p>
+      </div>
+      <div class="zig-collage">
+         <div class="mini-frame mini-1"><img src="images/dbp1.jpg"></div>
+         <div class="mini-frame mini-2"><img src="images/dbp2.jpg"></div>
+         <div class="mini-frame mini-3"><img src="images/dbp3.jpg"></div>
+      </div>
+   </div>
+</section>
+
+<script>
+   // --- PARTICLE BACKGROUND ENGINE ---
+   const canvas = document.getElementById('canvas-bg');
+   const ctx = canvas.getContext('2d');
+   let particles = [];
+
+   function initCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+   }
+
+   class Particle {
+      constructor() {
+         this.x = Math.random() * canvas.width;
+         this.y = Math.random() * canvas.height;
+         this.size = Math.random() * 2 + 1;
+         this.speedX = Math.random() * 0.8 - 0.4;
+         this.speedY = Math.random() * 0.8 - 0.4;
+      }
+      update() {
+         this.x += this.speedX;
+         this.y += this.speedY;
+         if (this.x > canvas.width) this.x = 0;
+         if (this.x < 0) this.x = canvas.width;
+         if (this.y > canvas.height) this.y = 0;
+         if (this.y < 0) this.y = canvas.height;
+      }
+      draw() {
+         ctx.fillStyle = 'rgba(255, 94, 58, 0.4)';
+         ctx.beginPath();
+         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+         ctx.fill();
+      }
+   }
+
+   function createParticles() {
+      particles = [];
+      const count = window.innerWidth < 900 ? 40 : 80;
+      for (let i = 0; i < count; i++) {
+         particles.push(new Particle());
+      }
+   }
+
+   function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+         p.update();
+         p.draw();
+         for (let j = index; j < particles.length; j++) {
+            const dx = p.x - particles[j].x;
+            const dy = p.y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 150) {
+               ctx.strokeStyle = `rgba(255, 94, 58, ${0.2 - distance/750})`;
+               ctx.lineWidth = 0.5;
+               ctx.beginPath();
+               ctx.moveTo(p.x, p.y);
+               ctx.lineTo(particles[j].x, particles[j].y);
+               ctx.stroke();
+            }
+         }
+      });
+      requestAnimationFrame(animate);
+   }
+
+   window.addEventListener('resize', () => {
+      initCanvas();
+      createParticles();
+   });
+
+   initCanvas();
+   createParticles();
+   animate();
+
+   // --- SCROLL UTILS ---
+   window.onscroll = function() {
+      let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      let scrolled = (winScroll / height) * 100;
+      document.getElementById("scroll-progress").style.width = scrolled + "%";
+   };
+
+   const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+         if (entry.isIntersecting) entry.target.classList.add('reveal');
+      });
+   }, { threshold: 0.1 });
+
+   document.querySelectorAll('.zigzag-row').forEach(row => observer.observe(row));
+</script>
+
+</body>
+</html>
