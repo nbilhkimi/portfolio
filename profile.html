@@ -1,0 +1,377 @@
+<?php
+// Pure Infographic - No User Session Required
+include 'components/connect.php'; 
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Dossier // Nabil Nur Hakimi</title>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Poppins:wght@300;400;600;900&display=swap" rel="stylesheet">
+
+   <style>
+      :root {
+         --primary-orange: #ff5e3a; 
+         --neon-glow: rgba(255, 94, 58, 0.6);
+         --bg-dark: #0a0a0a;
+         --card-bg: rgba(20, 20, 20, 0.7);
+         --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      /* --- ENTRANCE ANIMATION OVERLAY --- */
+      .page-shutter {
+         position: fixed;
+         top: 0; left: 0; width: 100%; height: 100%;
+         background: var(--primary-orange);
+         z-index: 9999;
+         transform: translateX(0);
+         transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+      }
+
+      .page-loaded .page-shutter {
+         transform: translateX(-100%);
+      }
+
+      body { 
+         background-color: var(--bg-dark); 
+         color: #fff; 
+         font-family: 'Poppins', sans-serif; 
+         overflow-x: hidden;
+         line-height: 1.6;
+         opacity: 0;
+         transition: opacity 0.8s ease;
+      }
+
+      body.page-ready { opacity: 1; }
+
+      /* --- CANVAS BACKGROUND --- */
+      #canvas-bg {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          z-index: -1;
+          background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+      }
+
+      /* --- CONSISTENT NAVIGATION HUB (Transparent) --- */
+      .nav-hub {
+         position: fixed;
+         top: 0; left: 0; width: 100%;
+         padding: 40px 8%;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         z-index: 1000;
+      }
+
+      .home-btn {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         text-decoration: none;
+         color: #fff;
+         font-family: 'Syncopate', sans-serif;
+         font-size: 0.7rem;
+         letter-spacing: 3px;
+         text-transform: uppercase;
+         padding: 10px 20px;
+         border: 1px solid rgba(255,255,255,0.1);
+         background: rgba(255,255,255,0.02);
+         transition: var(--transition);
+         backdrop-filter: blur(5px);
+      }
+
+      .home-btn i {
+         color: var(--primary-orange);
+         font-size: 0.8rem;
+         transition: var(--transition);
+      }
+
+      .home-btn:hover {
+         border-color: var(--primary-orange);
+         background: rgba(255, 94, 58, 0.1);
+         color: var(--primary-orange);
+         box-shadow: 0 0 20px rgba(255, 94, 58, 0.2);
+      }
+
+      .home-btn:hover i { transform: translateX(-5px); }
+
+      .btn-download {
+         background: var(--primary-orange);
+         color: #000; padding: 10px 20px;
+         font-family: 'Syncopate', sans-serif;
+         font-size: 0.65rem; font-weight: 700;
+         text-decoration: none; border-radius: 4px;
+         box-shadow: 0 0 15px var(--neon-glow);
+         transition: var(--transition);
+      }
+      .btn-download:hover { transform: translateY(-3px); box-shadow: 0 0 25px var(--primary-orange); }
+
+      /* --- CONTENT LAYOUT --- */
+      .bio-container {
+         max-width: 1400px; margin: 0 auto; 
+         padding: 180px 8% 100px 8%;
+      }
+
+      .section-header {
+         margin-bottom: 60px;
+         border-left: 4px solid var(--primary-orange);
+         padding-left: 25px;
+      }
+
+      .section-header span {
+         font-family: 'Syncopate'; font-size: 0.8rem; color: var(--primary-orange);
+         letter-spacing: 8px; display: block; margin-bottom: 15px; font-weight: 700;
+      }
+
+      .section-header h2 {
+         font-family: 'Syncopate'; font-size: clamp(2rem, 5vw, 3.5rem); 
+         text-transform: uppercase; font-weight: 900; letter-spacing: -1px;
+      }
+
+      .dossier-card {
+         background: var(--card-bg);
+         border: 1px solid rgba(255,255,255,0.1);
+         padding: 50px; margin-bottom: 80px;
+         position: relative; backdrop-filter: blur(15px);
+         opacity: 0; transform: translateY(30px);
+         transition: var(--transition);
+      }
+      .dossier-card.reveal { opacity: 1; transform: translateY(0); }
+
+      .bio-grid {
+         display: grid; grid-template-columns: 320px 1fr; 
+         gap: 60px; align-items: center;
+      }
+
+      .profile-frame {
+         border: 1px solid var(--primary-orange);
+         padding: 15px; background: rgba(255, 94, 58, 0.05);
+      }
+      .profile-frame img { width: 100%; filter: grayscale(1); transition: 0.5s; }
+      .dossier-card:hover .profile-frame img { filter: grayscale(0); }
+
+      .objective-text {
+         font-size: 1.1rem; color: #eee; margin-bottom: 30px;
+         border-left: 2px solid var(--primary-orange); padding-left: 25px;
+      }
+
+      .data-label {
+         font-family: 'Syncopate'; font-size: 0.65rem; color: var(--primary-orange);
+         letter-spacing: 3px; margin-bottom: 10px; display: block;
+      }
+
+      .expertise-grid {
+         display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+         gap: 30px; margin-top: 40px;
+      }
+
+      .tag {
+         display: inline-block; border: 1px solid rgba(255, 94, 58, 0.4);
+         color: var(--primary-orange); padding: 8px 16px;
+         font-family: 'Syncopate'; font-size: 0.6rem; margin: 5px;
+         background: rgba(255, 94, 58, 0.05);
+      }
+
+      #scroll-progress {
+         position: fixed; top: 0; left: 0; height: 4px; background: var(--primary-orange);
+         z-index: 2000; width: 0%; box-shadow: 0 0 10px var(--neon-glow);
+      }
+
+      @media (max-width: 900px) {
+         .nav-hub { padding: 20px 8%; flex-direction: column; gap: 15px; align-items: flex-start; }
+         .bio-grid { grid-template-columns: 1fr; text-align: center; }
+         .objective-text { border-left: none; padding-left: 0; }
+         .profile-frame { max-width: 250px; margin: 0 auto; }
+      }
+   </style>
+</head>
+<body>
+
+<div class="page-shutter"></div>
+<canvas id="canvas-bg"></canvas>
+<div id="scroll-progress"></div>
+
+<nav class="nav-hub">
+   <a href="home.php" class="home-btn transition-link">
+      <i class="fas fa-chevron-left"></i> RETURN_TO_BASE
+   </a>
+   <a href="files/resume.pdf" class="btn-download" download>DOWNLOAD_CV <i class="fas fa-file-download"></i></a>
+</nav>
+
+<main class="bio-container">
+   <section class="section-header">
+      <span>IDENT_FILE // 01</span>
+      <h2>Personnel Profile</h2>
+   </section>
+
+   <div class="dossier-card">
+      <div class="bio-grid">
+         <div class="profile-frame">
+            <img src="images/myprofile.jpg" alt="Nabil Nur Hakimi">
+         </div>
+         <div class="bio-info">
+            <h1 style="font-family:'Syncopate'; font-size: 2.5rem; margin-bottom: 10px;">NABIL NUR HAKIMI</h1>
+            <span class="data-label">UNITY DEVELOPER // MULTIMEDIA ARCHITECT</span>
+            <p class="objective-text">
+               Ambitious Unity Developer specializing in immersive VR/AR systems. 
+               Combining creativity with deep technical knowledge to architect 
+               seamless human-computer interactions.
+            </p>
+            <div class="expertise-grid">
+               <div>
+                  <span class="data-label">ACADEMIC</span>
+                  <p style="font-size: 0.9rem; color: #aaa;">Bachelor of Computer Science and Information Technology (Multimdedia Computing)<br>UTHM | 2022 - 2026</p>
+               </div>
+               <div>
+                  <span class="data-label">COMM_INTEL</span>
+                  <p style="font-size: 0.9rem; color: #aaa;">nabilhakimi0415@email.com<br>Johor, Malaysia</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <section class="section-header">
+      <span>TECHNICAL_LOGS // 02</span>
+      <h2>Core Expertise</h2>
+   </section>
+
+   <div class="dossier-card">
+      <div class="technology-expertise">
+         <div>
+            <span class="data-label">I'm familiar with this technologies and tools</span>
+            <div style="margin-top: 15px;">
+               <span class="tag">UNITY_3D</span>
+               <span class="tag">bLENDER_3D</span>
+               <span class="tag">C#_SCRIPT</span>
+               <span class="tag">PHP_8</span>
+               <span class="tag">SQL_DATABASE</span>
+               <span class="tag">Adobe</span>
+               <span class="tag">Visual Studio Code</span>
+               <span class="tag">XR_Integration</span>
+               <span class="tag">Animation</span>
+               <span class="tag">Rigging</span>
+            </div>
+         </div>
+         <div>
+            <span class="data-label"><br>WORK_EXPERIENCE</span>
+            <p style="font-size: 0.85rem; color: #999; margin-top: 15px;">
+               <strong>VR DEVELOPER INTERN (SD GUTHRIE BERHAD)<br>OCT 2025 - JAN 2026</strong><br>
+               Develop a Virtual Reality (VR) application designed to replicate the SD Guthrie Experience Centre and provide users with an immersive simulation of palm oil harvesting...
+            </p>
+             <p style="font-size: 0.85rem; color: #999; margin-top: 15px;">
+               <strong>VR DEVELOPER (UNIVERSITI TUN HUSSEIN ONN MALAYSIA)<br>JUL 2024 - JUL 2025</strong><br>
+               Developed multiple applications such as Virtual Reality application for Faculty of Technical and Vocational Education (FPTV)...
+            </p>
+         </div>
+      </div>
+   </div>
+</main>
+
+<script>
+   // Particle Background Engine
+   const canvas = document.getElementById('canvas-bg');
+   const ctx = canvas.getContext('2d');
+   let particles = [];
+
+   function initCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+   }
+
+   class Particle {
+      constructor() {
+         this.x = Math.random() * canvas.width;
+         this.y = Math.random() * canvas.height;
+         this.size = Math.random() * 2 + 1;
+         this.speedX = Math.random() * 1 - 0.5;
+         this.speedY = Math.random() * 1 - 0.5;
+      }
+      update() {
+         this.x += this.speedX;
+         this.y += this.speedY;
+         if (this.x > canvas.width) this.x = 0;
+         if (this.x < 0) this.x = canvas.width;
+         if (this.y > canvas.height) this.y = 0;
+         if (this.y < 0) this.y = canvas.height;
+      }
+      draw() {
+         ctx.fillStyle = 'rgba(255, 94, 58, 0.5)';
+         ctx.beginPath();
+         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+         ctx.fill();
+      }
+   }
+
+   function createParticles() {
+      particles = [];
+      for (let i = 0; i < 80; i++) {
+         particles.push(new Particle());
+      }
+   }
+
+   function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+         p.update();
+         p.draw();
+         for (let j = index; j < particles.length; j++) {
+            const dx = p.x - particles[j].x;
+            const dy = p.y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 150) {
+               ctx.strokeStyle = `rgba(255, 94, 58, ${1 - distance/150})`;
+               ctx.lineWidth = 0.5;
+               ctx.beginPath();
+               ctx.moveTo(p.x, p.y);
+               ctx.lineTo(particles[j].x, particles[j].y);
+               ctx.stroke();
+            }
+         }
+      });
+      requestAnimationFrame(animate);
+   }
+
+   window.addEventListener('resize', () => {
+      initCanvas();
+      createParticles();
+   });
+
+   initCanvas();
+   createParticles();
+   animate();
+
+   // Reveal and Scroll logic
+   window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+         document.body.classList.add('page-loaded');
+         document.body.classList.add('page-ready');
+      }, 100);
+   });
+
+   const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+         if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+         }
+      });
+   }, { threshold: 0.1 });
+
+   document.querySelectorAll('.dossier-card').forEach(card => observer.observe(card));
+
+   window.onscroll = function() {
+      let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      let scrolled = (winScroll / height) * 100;
+      document.getElementById("scroll-progress").style.width = scrolled + "%";
+   };
+</script>
+
+</body>
+</html>
