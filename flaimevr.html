@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RESCUE POINT VR | Firefighting Simulation</title>
+    <title>FLAIMEVR | Firefighting Simulation</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
@@ -28,18 +28,21 @@
             overflow-x: hidden; 
         }
 
-        /* --- ENTRANCE SHUTTER --- */
+        /* --- ORIGINAL HORIZONTAL SHUTTER --- */
         #entrance-shutter {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--fire-red); z-index: 10000;
+            transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: none;
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
         }
         #entrance-shutter::after {
-            content: "INITIALIZING MISSION...";
+            content: "INITIALIZING MISSION";
             color: white; font-family: 'Bebas Neue'; font-size: 2rem; letter-spacing: 5px;
         }
-        body.page-loaded #entrance-shutter { transform: translateY(-100%); }
+        body.page-loaded #entrance-shutter { transform: translateX(-100%); }
+        body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
+        body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
 
         /* --- NAVIGATION --- */
         .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
@@ -53,38 +56,56 @@
 
         /* --- HERO SECTION --- */
         .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('images/fire_bg.jpg') center/cover no-repeat;
+            position: relative; height: 100vh;
+            background: url('images/firefighting_bg.jpg') center/cover no-repeat;
             display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
             border-bottom: 10px solid var(--fire-red);
         }
+        .hero::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); z-index: 1;
+        }
 
         .hero-logo {
-            width: 85%;
-            max-width: 650px;
+            position: relative; z-index: 2; width: 85%; max-width: 650px;
             filter: drop-shadow(0 0 20px rgba(211, 47, 47, 0.7));
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
+            margin-bottom: 20px; transition: transform 0.3s ease;
         }
-        .hero-logo:hover { transform: scale(1.03); }
-
         .hero p { 
-            font-family: 'Bebas Neue';
-            font-size: 1.8rem; 
-            text-transform: uppercase; 
-            color: var(--caution-yellow); 
-            letter-spacing: 4px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+            position: relative; z-index: 2; font-family: 'Bebas Neue'; font-size: 1.8rem; 
+            text-transform: uppercase; color: var(--caution-yellow); 
+            letter-spacing: 4px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
         }
 
-        .hero-nav { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+        .hero-nav { position: relative; z-index: 2; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
         .btn-hero {
-            background: transparent; color: white; padding: 15px 35px;
+            background: rgba(0,0,0,0.5); color: white; padding: 15px 35px;
             text-decoration: none; font-family: 'Bebas Neue';
             font-size: 1.4rem; border: 2px solid white;
             transition: 0.3s; display: flex; align-items: center; gap: 10px;
+            backdrop-filter: blur(5px);
         }
         .btn-hero:hover { background: white; color: var(--fire-red); }
+
+        /* --- TECH BAR --- */
+        .tech-bar {
+            background: #000; color: var(--caution-yellow);
+            padding: 15px; display: flex; justify-content: center; gap: 50px;
+            font-family: 'Bebas Neue'; font-size: 1.3rem; border-bottom: 2px solid var(--fire-red);
+        }
+
+        /* --- COLLABORATORS --- */
+        .partners-bar {
+            background: #fff; padding: 30px 10%;
+            display: flex; justify-content: center; align-items: center; gap: 60px;
+            border-bottom: 4px solid var(--fire-red);
+        }
+        .partner-logo { 
+            height: 60px; width: auto; 
+            filter: grayscale(100%) contrast(1.2); 
+            opacity: 0.7; transition: 0.4s; 
+        }
+        .partner-logo:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
 
         /* --- MISSION OVERVIEW --- */
         .overview-card {
@@ -92,43 +113,25 @@
             padding: 60px; border-left: 10px solid var(--fire-red);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative;
         }
-        .overview-card::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes);
-        }
+        .overview-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes); }
         .overview-card h2 { font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px; }
         .overview-card p { font-size: 1.3rem; line-height: 1.6; color: #bdc3c7; }
 
-        /* --- TECH SPECS BAR --- */
-        .tech-bar {
-            background: #000; color: var(--caution-yellow);
-            padding: 15px; display: flex; justify-content: center; gap: 50px;
-            font-family: 'Bebas Neue'; font-size: 1.3rem; border-bottom: 2px solid var(--fire-red);
-        }
-
-        /* --- PIPELINE --- */
         section { padding: 80px 10%; }
         .ref-heading { font-family: 'Bebas Neue'; color: white; font-size: 4rem; text-align: center; margin-bottom: 50px; }
         
-        .info-row { 
-            display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; 
-            background: #222; border: 1px solid #444; overflow: hidden;
-        }
+        .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
         .info-row:nth-child(even) { flex-direction: row-reverse; }
         .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(30%); transition: 0.5s; }
-        .info-row:hover .info-image { filter: grayscale(0%); }
         .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
         .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--fire-orange); margin-bottom: 15px; }
         .tool-label { color: var(--caution-yellow); text-transform: uppercase; font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
 
-        /* --- VIDEO FRAME --- */
         .trailer-section { background: #111; border-top: 5px solid var(--fire-red); }
-        .video-frame {
-            max-width: 1100px; margin: 0 auto; background: #000; padding: 10px; border: 1px solid #333;
-        }
+        .video-frame { max-width: 1100px; margin: 0 auto; background: #000; padding: 10px; border: 1px solid #333; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* --- GALLERY --- */
         .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
         .ss-card { border: 2px solid #333; filter: brightness(0.8) contrast(1.2); transition: 0.4s; }
         .ss-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -155,73 +158,56 @@
 <div id="backToTop"><i class="fas fa-arrow-up"></i></div>
 
 <nav class="nav-top">
-   <a href="project.html" class="btn-nav">
+   <a href="project.html" class="btn-nav transition-link">
       <i class="fas fa-terminal"></i> RETURN TO PORTFOLIO
    </a>
 </nav>
 
 <section class="hero">
-   <img src="images/rescuepoint_logo.png" alt="RESCUE POINT VR" class="hero-logo">
+   <img src="images/flaimelogo.png" alt="FLAIMEVR" class="hero-logo">
    <p>Advanced Firefighting Simulation & Training</p>
    <div class="hero-nav">
       <a href="#about" class="btn-hero"><i class="fas fa-bullhorn"></i> MISSION</a>
-      <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> SYSTEMS</a>
-      <a href="#trailer" class="btn-hero"><i class="fas fa-eye"></i> VR DEMO</a>
-      <a href="#gallery" class="btn-hero"><i class="fas fa-layer-group"></i> INTEL</a>
+      <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> TECHNICAL OVERVIEW</a>
+      <a href="#trailer" class="btn-hero"><i class="fas fa-eye"></i> TEASER</a>
+      <a href="#gallery" class="btn-hero"><i class="fas fa-layer-group"></i> GALLERY</a>
    </div>
 </section>
 
 <div class="tech-bar">
     <div class="tech-item"><i class="fas fa-vr-cardboard"></i> Meta Quest 3 / OpenXR</div>
     <div class="tech-item"><i class="fab fa-unity"></i> Unity URP</div>
-    <div class="tech-item"><i class="fas fa-fire-extinguisher"></i> VRTK Physics</div>
+    <div class="tech-item"><i class="fas fa-fire-extinguisher"></i> Artificial Intelligence</div>
+</div>
+
+<div class="partners-bar">
+   <img src="images/logo1.png" alt="Partner 1" class="partner-logo">
+   <img src="images/logo2.png" alt="Partner 2" class="partner-logo">
+   <img src="images/logo3.png" alt="Partner 3" class="partner-logo">
 </div>
 
 <section id="about" class="reveal">
     <div class="overview-card">
         <h2>Tactical Simulation</h2>
         <p>
-            <b>FLAIMEVR</b> is a high-fidelity firefighting simulation designed for emergency response training. 
-            Players are immersed in dynamic, physics-based fire environments where every second counts. 
-            The project focuses on realistic tool handling, thermal imaging accuracy, and procedural smoke propagation.
-        </p>
-        <p style="margin-top:20px;">
-            Developed as a professional portfolio piece, this simulation demonstrates the integration of complex 
-            VR interaction patterns with optimized visual effects for standalone hardware.
+            <b>FLAIMEVR</b>  is an immersive virtual reality simulation that integrates hands-on firefighting operations with real-time strategic (RTS) decision-making to provide a realistic and educational experience in fire management. Designed as both a training tool and an engaging game, FlaimeVR challenges players to manage resources, deploy firefighting units, and adapt to dynamic environmental conditions. Players experience diverse scenarios—from containing small-scale house fires to controlling fast-spreading wildfires and managing complex industrial emergencies—while facing hazards such as chemical explosions and shifting wind patterns. The inclusion of AI-driven environmental data enhances situational awareness by providing real-time updates on fire behaviour, weather conditions, and operational consequences. This combination of realistic VR immersion, strategic resource management, and AI-assisted decision support creates a unique platform for developing crisis management, leadership, and problem-solving skills.
         </p>
     </div>
 </section>
 
 <section id="technical" class="reveal">
    <h2 class="ref-heading">Development Pipeline</h2>
-   
    <div class="info-row">
       <img src="images/vr_interaction.png" class="info-image" alt="VR Mechanics">
       <div class="info-content">
          <div class="tool-label">C# / XR Interaction Toolkit</div>
          <h3>01. Physics-Based Interaction</h3>
-         <p>Developed custom grab mechanics for heavy equipment (axes, hoses, extinguishers) utilizing two-handed interaction logic and haptic feedback profiles to simulate weight and resistance.</p>
-      </div>
-   </div>
-
-   <div class="info-row">
-      <img src="images/vfx_fire.png" class="info-image" alt="VFX">
-      <div class="info-content">
-         <div class="tool-label">Unity VFX Graph / Shader Graph</div>
-         <h3>02. Dynamic Fire Systems</h3>
-         <p>Created a performant fire propagation system using GPU particles and custom shaders. The heat maps dynamically react to extinguisher particles, creating a realistic "knockdown" effect.</p>
-      </div>
-   </div>
-
-   <div class="info-row">
-      <img src="images/environment.png" class="info-image" alt="Environment">
-      <div class="info-content">
-         <div class="tool-label">Blender / Substance Painter</div>
-         <h3>03. Industrial Asset Design</h3>
-         <p>Modeled high-detail, low-poly industrial environments optimized for VR. Used PBR workflows to ensure surface textures (metal, soot, water) react accurately to the emergency lighting.</p>
+         <p>Developed custom grab mechanics for heavy equipment utilizing two-handed interaction logic and haptic feedback profiles.</p>
       </div>
    </div>
 </section>
+
+
 
 <section id="trailer" class="trailer-section">
    <div class="video-frame">
@@ -245,14 +231,27 @@
 
 <footer>
    <div class="hazard-line"></div>
-       <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | Developed by Nabil</p>
+   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">RESCUE POINT VR | Developed by Nabil</p>
    <p style="color: #666; margin-top: 10px;">FlaimeVR | nabil hakimi</p>
 </footer>
 
 <script>
    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => { document.body.classList.add('page-loaded'); }, 500);
+      // Intro Transition (Horizontal Wipe)
+      setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
+      // Home/Exit Button Wipe Transition logic
+      const transitionLinks = document.querySelectorAll('.transition-link');
+      transitionLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const target = this.href;
+              document.body.classList.add('trigger-wipe');
+              setTimeout(() => { window.location.href = target; }, 600);
+          });
+      });
+
+      // Back to Top Logic
       const btt = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
          if (window.pageYOffset > 300) { btt.classList.add('show'); } 
@@ -260,6 +259,7 @@
       });
       btt.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
+      // Scroll Reveal
       function reveal() {
           const reveals = document.querySelectorAll(".reveal");
           reveals.forEach(el => {
