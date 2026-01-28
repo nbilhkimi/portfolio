@@ -36,6 +36,8 @@
           pointer-events: none;
       }
       body.page-loaded #entrance-shutter { transform: translateX(-100%); }
+      body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
+      body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
 
       /* --- NAVIGATION --- */
       .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
@@ -45,7 +47,7 @@
           box-shadow: 0 4px 0px #3a2410; transition: 0.2s;
           display: inline-flex; align-items: center; gap: 10px;
       }
-      .btn-nav:hover { background: var(--stardew-orange); transform: translateY(2px); }
+      .btn-nav:hover { background: var(--stardew-orange); transform: translateY(2px); box-shadow: 0 2px 0px #3a2410; }
 
       /* --- HERO SECTION --- */
       .hero {
@@ -60,16 +62,26 @@
       }
       @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-      .hero-nav { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+      .hero-nav { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; z-index: 10; }
       .btn-hero {
           background: rgba(255, 255, 255, 0.9); color: var(--wood-brown); padding: 15px 30px;
           border-radius: 15px; text-decoration: none; font-family: 'Sniglet', cursive;
           font-size: 1.4rem; border: 4px solid var(--wood-brown);
           box-shadow: 0 6px 0px var(--wood-brown); transition: 0.2s; display: flex; align-items: center; gap: 10px;
       }
-      .btn-hero:hover { transform: translateY(3px); background: var(--stardew-yellow); }
+      .btn-hero:hover { transform: translateY(3px); background: var(--stardew-yellow); box-shadow: 0 3px 0px var(--wood-brown); }
 
-      /* --- OVERVIEW SECTION (NEW) --- */
+      /* --- BACK TO TOP --- */
+      #backToTop {
+          position: fixed; bottom: 30px; right: 30px;
+          background: var(--wood-brown); color: white; width: 60px; height: 60px;
+          border-radius: 50%; display: flex; justify-content: center; align-items: center;
+          cursor: pointer; border: 4px solid var(--stardew-yellow); opacity: 0;
+          visibility: hidden; transition: 0.3s; z-index: 999; font-size: 1.5rem;
+      }
+      #backToTop.show { opacity: 1; visibility: visible; }
+
+      /* --- OVERVIEW SECTION --- */
       .overview-card {
           background: #fff; margin: 40px auto; max-width: 900px;
           padding: 50px; border-radius: 40px; border: 6px solid var(--wood-brown);
@@ -79,19 +91,24 @@
       .overview-card p { font-size: 1.6rem; line-height: 1.4; margin-bottom: 25px; }
       .paw-divider { color: var(--cat-pink); font-size: 2rem; margin: 20px 0; }
 
-      /* --- BACK TO TOP (CAT THEME) --- */
-      #backToTop {
-          position: fixed; bottom: 30px; right: 30px;
-          background: var(--wood-brown); color: white; width: 60px; height: 60px;
-          border-radius: 50%; display: flex; justify-content: center; align-items: center;
-          cursor: pointer; border: 4px solid var(--stardew-yellow); opacity: 0;
-          visibility: hidden; transition: 0.3s; z-index: 999; font-size: 1.5rem;
+      /* --- TECH STACK BAR --- */
+      .tech-bar {
+          background: var(--wood-brown); color: white;
+          padding: 20px; display: flex; justify-content: center; gap: 40px;
+          font-family: 'Sniglet', cursive; font-size: 1.2rem;
       }
-      #backToTop.show { opacity: 1; visibility: visible; }
-      #backToTop:hover { background: var(--stardew-orange); transform: scale(1.1) rotate(10deg); }
+      .tech-item { display: flex; align-items: center; gap: 8px; opacity: 0.9; }
 
-      /* --- PIPELINE & OTHERS --- */
-      section { padding: 60px 10%; }
+      /* --- PARTNERS --- */
+      .partners-bar {
+          background: #fff; padding: 40px 10%;
+          border-bottom: 4px solid var(--wood-brown); text-align: center;
+      }
+      .partner-logo { height: 80px; width: auto; filter: grayscale(100%); transition: 0.3s; }
+      .partner-logo:hover { filter: grayscale(0%); }
+
+      /* --- PIPELINE --- */
+      section { padding: 80px 10%; }
       .ref-heading { font-family: 'Sniglet', cursive; color: var(--wood-brown); font-size: 3.5rem; text-align: center; margin-bottom: 50px; }
       
       .info-row { 
@@ -111,6 +128,7 @@
           margin-bottom: 10px; font-size: 1.1rem;
       }
 
+      /* --- VIDEO --- */
       .trailer-section { background: var(--wood-brown); padding: 80px 10%; text-align: center; }
       .video-frame {
           max-width: 1000px; margin: 0 auto; background: var(--wood-light); padding: 15px; 
@@ -119,10 +137,11 @@
       .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; }
       .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-      .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-      .ss-card { border: 4px solid var(--wood-brown); border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; }
-      .ss-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-      .ss-card:hover img { transform: scale(1.05); }
+      /* --- GALLERY --- */
+      .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+      .ss-card { border: 4px solid var(--wood-brown); border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 9; background: #000; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+      .ss-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; display: block; }
+      .ss-card:hover img { transform: scale(1.1); filter: brightness(1.1); }
 
       .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
       .reveal.active { opacity: 1; transform: translateY(0); }
@@ -133,36 +152,46 @@
 <body>
 
 <div id="entrance-shutter"></div>
-
 <div id="backToTop"><i class="fas fa-paw"></i></div>
 
 <nav class="nav-top">
    <a href="project.html" class="btn-nav transition-link">
-      <i class="fas fa-arrow-left"></i> RETURN
+      <i class="fas fa-arrow-left"></i> RETURN TO PORTFOLIO
    </a>
 </nav>
 
-<section class="hero" id="top">
+<section class="hero">
    <img src="images/jejakbelanglogo.png" alt="Jejak Belang Logo" class="game-logo">
    <div class="hero-nav">
       <a href="#about" class="btn-hero"><i class="fas fa-cat"></i> THE STORY</a>
       <a href="#technical" class="btn-hero"><i class="fas fa-tools"></i> PIPELINE</a>
       <a href="#trailer" class="btn-hero"><i class="fas fa-play"></i> TRAILER</a>
+      <a href="#gallery" class="btn-hero"><i class="fas fa-images"></i> GALLERY</a>
    </div>
 </section>
+
+<div class="tech-bar">
+    <div class="tech-item"><i class="fab fa-unity"></i> Unity URP</div>
+    <div class="tech-item"><i class="fas fa-cube"></i> Blender 3D</div>
+    <div class="tech-item"><i class="fas fa-code"></i> C# Modular Systems</div>
+</div>
+
+<div class="partners-bar">
+   <img src="images/logodbp.png" alt="Collaborator" class="partner-logo">
+</div>
 
 <section id="about" class="reveal">
     <div class="overview-card">
         <i class="fas fa-paw paw-divider"></i>
         <h2>Welcome to Jejak Belang</h2>
         <p>
-            Embark on a heartwarming journey about Mika's adventure to find his missing cat Belang. 
-            <b>Jejak Belang</b> is a top down narrative-driven adventure that explores the bonds between animals and humans, 
+            Embark on a heartwarming journey through the eyes of a stray cat navigating a beautifully stylized world. 
+            <b>Jejak Belang</b> is a narrative-driven adventure that explores the bonds between animals and humans, 
             combining cozy exploration with meaningful storytelling.
         </p>
         <p>
-            Players must navigate environmental puzzles, interact with eccentric characters, and find their way home 
-            in a world inspired by local heritage and soft, whimsical aesthetics.
+            Navigate environmental puzzles, interact with eccentric characters, and find your way home in a world 
+            inspired by local heritage and soft, whimsical aesthetics.
         </p>
         <i class="fas fa-paw paw-divider"></i>
     </div>
@@ -172,60 +201,65 @@
    <h2 class="ref-heading">Technical Pipeline</h2>
    
    <div class="info-row">
-      <img src="images/characters.png" class="info-image" alt="Character Concept">
+      <img src="images/characters.png" class="info-image" alt="Character Design">
       <div class="info-content">
          <div class="tool-label">Adobe Illustrator & Figma</div>
-         <h3>01. Visual Concepts</h3>
-         <p>I crafted the cat protagonists and NPC designs in <b>Illustrator</b>. <b>Figma</b> was essential for the user interface, ensuring the "paw-sitive" experience starts from the menu.</p>
+         <h3>01. Characters</h3>
+         <p>using adobe illustrator, i draw my characters in 2d art to get a better view of the art direction. the game is a lighthearted story driven so a soft and colourful characters design is needed to gain more interest towards younger audiance while mature enough to attract older generation.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/unity_ss.png" class="info-image" alt="Unity Engine">
+      <img src="images/unity_ss.png" class="info-image" alt="Unity engine">
       <div class="info-content">
          <div class="tool-label">Unity Engine</div>
-         <h3>02. Technical Development</h3>
-         <p>Built using <b>Unity URP</b>. I focused on vibrant lighting and custom shaders to bring the feline's perspective to life in a stylized 3D environment.</p>
+         <h3>02. Unity Engine Development</h3>
+         <p>Developed within the Unity Universal Render Pipeline (URP). Features include custom HLSL shaders for environmental effects and a modular C# event system for gameplay triggers.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/3d_sculpt.png" class="info-image" alt="Blender Modeling">
+      <img src="images/3d_sculpt.png" class="info-image" alt="Blender">
       <div class="info-content">
          <div class="tool-label">Blender 3D</div>
-         <h3>03. Stylized 3D Creation</h3>
-         <p>Environmental props and cat animations were modeled in <b>Blender</b>. Low-poly techniques were used to keep the performance smooth for a relaxing experience.</p>
+         <h3>03. Stylized 3D Modeling</h3>
+         <p>Comprehensive environmental 3D asset creation using Blender. Focus on low-poly optimization while maintaining high visual appeal for stylized world-building.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/vsc_ss.png" class="info-image" alt="VS Code Scripting">
+      <img src="images/vsc_ss.png" class="info-image" alt="VS Code">
       <div class="info-content">
-         <div class="tool-label">Visual Studio Code (VSC)</div>
-         <h3>04. C# Modular Logic</h3>
-         <p>Core gameplay, including feline movement and interaction systems, was scripted in <b>C#</b> using <b>VS Code</b> for a clean and efficient codebase.</p>
+         <div class="tool-label">Visual Studio Code</div>
+         <h3>04. Visual Studio Code</h3>
+         <p>Programming logic utilizing C#. Clean, documented code structure designed for modularity and scalability within the Unity environment.</p>
       </div>
    </div>
 </section>
 
 <section id="trailer" class="trailer-section">
-   <h2 class="ref-heading" style="color: white; margin-top: 0;">Watch the Trailer</h2>
    <div class="video-frame">
        <div class="video-container">
           <iframe src="https://www.youtube.com/embed/lnccZmlOr3E" frameborder="0" allowfullscreen></iframe>
        </div>
    </div>
+   <a href="#" class="btn-nav" style="margin-top: 40px; font-size: 1.5rem; padding: 20px 40px;">
+      <i class="fas fa-gamepad"></i> DOWNLOAD BUILD
+   </a>
 </section>
 
 <section id="gallery" class="reveal">
    <h2 class="ref-heading">Gameplay Gallery</h2>
    <div class="screenshot-grid">
-      <div class="ss-card"><img src="images/jb1.png" alt="P1"></div>
-      <div class="ss-card"><img src="images/jb2.png" alt="P2"></div>
-      <div class="ss-card"><img src="images/jb3.png" alt="P3"></div>
-      <div class="ss-card"><img src="images/jb4.png" alt="P4"></div>
-      <div class="ss-card"><img src="images/jb5.png" alt="P5"></div>
-      <div class="ss-card"><img src="images/jb6.png" alt="P6"></div>
+      <div class="ss-card"><img src="images/jb1.png" alt="Preview 1"></div>
+      <div class="ss-card"><img src="images/jb2.png" alt="Preview 2"></div>
+      <div class="ss-card"><img src="images/jb3.png" alt="Preview 3"></div>
+      <div class="ss-card"><img src="images/jb4.png" alt="Preview 4"></div>
+      <div class="ss-card"><img src="images/jb5.png" alt="Preview 5"></div>
+      <div class="ss-card"><img src="images/jb6.png" alt="Preview 6"></div>
+      <div class="ss-card"><img src="images/jb7.png" alt="Preview 7"></div>
+      <div class="ss-card"><img src="images/jb8.png" alt="Preview 8"></div>
+      <div class="ss-card"><img src="images/jb9.png" alt="Preview 9"></div>
    </div>
 </section>
 
@@ -237,17 +271,13 @@
    window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
-      // Back to Top Logic
       const btt = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
          if (window.pageYOffset > 300) { btt.classList.add('show'); } 
          else { btt.classList.remove('show'); }
       });
-      btt.addEventListener('click', () => {
-         window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+      btt.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-      // Scroll Reveal logic
       function reveal() {
           const reveals = document.querySelectorAll(".reveal");
           reveals.forEach(el => {
