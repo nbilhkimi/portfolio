@@ -71,7 +71,7 @@
       }
       .btn-hero:hover { transform: translateY(3px); background: var(--stardew-yellow); box-shadow: 0 3px 0px var(--wood-brown); }
 
-      /* --- BACK TO TOP --- */
+      /* --- BACK TO TOP (PAW) --- */
       #backToTop {
           position: fixed; bottom: 30px; right: 30px;
           background: var(--wood-brown); color: white; width: 60px; height: 60px;
@@ -85,11 +85,11 @@
       .overview-card {
           background: #fff; margin: 40px auto; max-width: 900px;
           padding: 50px; border-radius: 40px; border: 6px solid var(--wood-brown);
-          box-shadow: 12px 12px 0px var(--stardew-yellow); text-align: center;
+          box-shadow: 12px 12px 0px var(--cat-pink); text-align: center;
       }
       .overview-card h2 { font-family: 'Sniglet', cursive; font-size: 3rem; color: var(--wood-brown); margin-bottom: 20px; }
       .overview-card p { font-size: 1.6rem; line-height: 1.4; margin-bottom: 25px; }
-      .paw-divider { color: var(--stardew-yellow); font-size: 2rem; margin: 20px 0; }
+      .paw-divider { color: var(--cat-pink); font-size: 2rem; margin: 20px 0; }
 
       /* --- TECH STACK BAR --- */
       .tech-bar {
@@ -210,7 +210,7 @@
    </div>
 
    <div class="info-row">
-      <img src="images/unityjb.png" class="info-image" alt="Unity engine">
+      <img src="images/unity_ss.png" class="info-image" alt="Unity engine">
       <div class="info-content">
          <div class="tool-label">Unity Engine</div>
          <h3>02. Unity Engine Development</h3>
@@ -219,7 +219,7 @@
    </div>
 
    <div class="info-row">
-      <img src="images/blenderjb.png" class="info-image" alt="Blender">
+      <img src="images/3d_sculpt.png" class="info-image" alt="Blender">
       <div class="info-content">
          <div class="tool-label">Blender 3D</div>
          <h3>03. Stylized 3D Modeling</h3>
@@ -228,7 +228,7 @@
    </div>
 
    <div class="info-row">
-      <img src="images/vscjb.png" class="info-image" alt="VS Code">
+      <img src="images/vsc_ss.png" class="info-image" alt="VS Code">
       <div class="info-content">
          <div class="tool-label">Visual Studio Code</div>
          <h3>04. Visual Studio Code</h3>
@@ -243,23 +243,20 @@
           <iframe src="https://www.youtube.com/embed/lnccZmlOr3E" frameborder="0" allowfullscreen></iframe>
        </div>
    </div>
-   <a href="#" class="btn-nav" style="margin-top: 40px; font-size: 1.5rem; padding: 20px 40px;">
-      <i class="fas fa-gamepad"></i> DOWNLOAD BUILD
-   </a>
 </section>
 
 <section id="gallery" class="reveal">
    <h2 class="ref-heading">Gameplay Gallery</h2>
    <div class="screenshot-grid">
-      <div class="ss-card"><img src="images/jb1.png" alt="Preview 1"></div>
-      <div class="ss-card"><img src="images/jb2.png" alt="Preview 2"></div>
-      <div class="ss-card"><img src="images/jb3.png" alt="Preview 3"></div>
-      <div class="ss-card"><img src="images/jb4.png" alt="Preview 4"></div>
-      <div class="ss-card"><img src="images/jb5.png" alt="Preview 5"></div>
-      <div class="ss-card"><img src="images/jb6.png" alt="Preview 6"></div>
-      <div class="ss-card"><img src="images/jb7.png" alt="Preview 7"></div>
-      <div class="ss-card"><img src="images/jb8.png" alt="Preview 8"></div>
-      <div class="ss-card"><img src="images/jb9.png" alt="Preview 9"></div>
+      <div class="ss-card"><img src="images/jb1.png" alt="P1"></div>
+      <div class="ss-card"><img src="images/jb2.png" alt="P2"></div>
+      <div class="ss-card"><img src="images/jb3.png" alt="P3"></div>
+      <div class="ss-card"><img src="images/jb4.png" alt="P4"></div>
+      <div class="ss-card"><img src="images/jb5.png" alt="P5"></div>
+      <div class="ss-card"><img src="images/jb6.png" alt="P6"></div>
+      <div class="ss-card"><img src="images/jb7.png" alt="P7"></div>
+      <div class="ss-card"><img src="images/jb8.png" alt="P8"></div>
+      <div class="ss-card"><img src="images/jb9.png" alt="P9"></div>
    </div>
 </section>
 
@@ -269,8 +266,25 @@
 
 <script>
    window.addEventListener('DOMContentLoaded', () => {
+      // Entrance Swipe
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
+      // Exit Swipe Logic
+      const transitionLinks = document.querySelectorAll('.transition-link');
+      transitionLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+             e.preventDefault();
+             const target = this.getAttribute('href');
+             document.body.classList.remove('page-loaded');
+             document.body.classList.add('page-exiting');
+             setTimeout(() => {
+                document.body.classList.add('trigger-wipe');
+                setTimeout(() => { window.location.href = target; }, 600);
+             }, 50);
+          });
+      });
+
+      // Back to Top Logic
       const btt = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
          if (window.pageYOffset > 300) { btt.classList.add('show'); } 
@@ -278,6 +292,7 @@
       });
       btt.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
+      // Scroll Reveal logic
       function reveal() {
           const reveals = document.querySelectorAll(".reveal");
           reveals.forEach(el => {
