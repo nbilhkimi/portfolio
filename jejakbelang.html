@@ -15,6 +15,7 @@
           --stardew-orange: #ff5e3a; 
           --bg-warm: #fdf2e9;
           --wood-brown: #5d3a1a;
+          --wood-light: #8b5a2b;
           --text-main: #4a301a;
       }
 
@@ -26,7 +27,7 @@
           overflow-x: hidden; 
       }
 
-      /* --- RIGHT TO LEFT TRANSITION SHUTTER --- */
+      /* --- TRANSITION SHUTTER --- */
       #entrance-shutter {
           position: fixed;
           top: 0; left: 0;
@@ -37,90 +38,96 @@
           transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
           pointer-events: none;
       }
-
-      /* Entrance: Reveal page by moving shutter left */
-      body.page-loaded #entrance-shutter { 
-          transform: translateX(-100%); 
-      }
-
-      /* Exit Prep: Jump shutter to the right side (invisible) */
-      body.page-exiting #entrance-shutter { 
-          transform: translateX(100%);
-          transition: none; 
-      }
-      
-      /* Exit Animation: Slide shutter back to center from right */
-      body.trigger-wipe #entrance-shutter {
-          transform: translateX(0);
-          transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
-      }
-
-      /* --- SCROLL ANIMATIONS --- */
-      .reveal { opacity: 0; transform: translateY(40px); transition: all 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
-      .reveal.active { opacity: 1; transform: translateY(0); }
+      body.page-loaded #entrance-shutter { transform: translateX(-100%); }
+      body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
+      body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
 
       /* --- NAVIGATION --- */
       .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
       .btn-nav {
           background: var(--wood-brown); color: #fff; padding: 12px 24px;
           text-decoration: none; border-radius: 12px; font-family: 'Sniglet', cursive;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s;
+          box-shadow: 0 4px 0px #3a2410; transition: 0.2s;
           display: inline-flex; align-items: center; gap: 10px;
       }
-      .btn-nav:hover { background: var(--stardew-orange); transform: translateY(-2px); }
+      .btn-nav:hover { background: var(--stardew-orange); transform: translateY(2px); box-shadow: 0 2px 0px #3a2410; }
 
       /* --- HERO SECTION --- */
       .hero {
           height: 100vh;
-          background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/jbbg.png') center/cover no-repeat;
+          background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url('images/jbbg.png') center/cover no-repeat;
           display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
       }
       .game-logo {
-          width: 95%; max-width: 850px; 
-          filter: drop-shadow(0 20px 20px rgba(0,0,0,0.4));
+          width: 90%; max-width: 800px; 
+          filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
           animation: float 4s ease-in-out infinite;
       }
-      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+      /* --- TECH STACK BAR --- */
+      .tech-bar {
+          background: var(--wood-brown); color: white;
+          padding: 20px; display: flex; justify-content: center; gap: 40px;
+          font-family: 'Sniglet', cursive; font-size: 1.2rem;
+      }
+      .tech-item { display: flex; align-items: center; gap: 8px; opacity: 0.9; }
 
       /* --- PARTNERS --- */
       .partners-bar {
-          background: #fff; padding: 50px 10%;
+          background: #fff; padding: 40px 10%;
           border-bottom: 4px solid var(--wood-brown); text-align: center;
       }
-      .partner-logo { height: 120px; width: auto; }
+      .partner-logo { height: 80px; width: auto; filter: grayscale(100%); transition: 0.3s; }
+      .partner-logo:hover { filter: grayscale(0%); }
 
-      /* --- INFOGRAPHIC --- */
+      /* --- PIPELINE --- */
+      section { padding: 80px 10%; }
+      .ref-heading { font-family: 'Sniglet', cursive; color: var(--wood-brown); font-size: 3.5rem; text-align: center; margin-bottom: 50px; }
+      
       .info-row { 
-          display: flex; align-items: center; gap: 60px; margin-bottom: 80px; 
-          background: #fff; padding: 40px; border-radius: 40px; border: 4px solid var(--wood-brown);
-          box-shadow: 10px 10px 0px var(--stardew-orange);
+          display: flex; align-items: center; gap: 60px; margin-bottom: 60px; 
+          background: #fff; padding: 30px; border-radius: 30px; border: 4px solid var(--wood-brown);
+          box-shadow: 8px 8px 0px var(--stardew-orange);
       }
       .info-row:nth-child(even) { flex-direction: row-reverse; }
-      .info-image { flex: 1.2; border-radius: 25px; border: 3px solid var(--wood-brown); width: 100%; height: 400px; object-fit: cover; }
-      .info-content h3 { font-family: 'Sniglet', cursive; font-size: 2.8rem; color: var(--wood-brown); margin-bottom: 15px; }
-      .info-content p { font-size: 1.5rem; line-height: 1.4; }
+      .info-image { flex: 1; border-radius: 20px; border: 3px solid var(--wood-brown); height: 350px; object-fit: cover; }
+      .info-content { flex: 1; }
+      .info-content h3 { font-family: 'Sniglet', cursive; font-size: 2.5rem; color: var(--wood-light); margin-bottom: 10px; }
+      .info-content p { font-size: 1.4rem; line-height: 1.5; }
 
-      /* --- MEDIA --- */
-      .trailer-section { background: var(--wood-brown); padding: 100px 10%; text-align: center; }
-      .video-container { max-width: 1200px; margin: 0 auto; border: 10px solid #fff; border-radius: 40px; overflow: hidden; position: relative; padding-bottom: 56.25%; height: 0; }
+      /* --- VIDEO --- */
+      .trailer-section { background: var(--wood-brown); padding: 80px 10%; text-align: center; }
+      .video-frame {
+          max-width: 1000px; margin: 0 auto;
+          background: var(--wood-light); padding: 15px; border-radius: 25px;
+          border: 6px solid #4a301a; box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+      }
+      .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 10px; overflow: hidden; }
       .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
       .btn-download {
-          background: var(--stardew-yellow); color: var(--wood-brown); padding: 25px 60px;
-          font-size: 2.5rem; font-family: 'Sniglet', cursive; text-decoration: none;
-          border: 6px solid var(--wood-brown); border-radius: 60px; box-shadow: 0 12px 0px var(--wood-brown);
-          transition: 0.2s; display: inline-block; margin-top: 50px;
+          background: var(--stardew-yellow); color: var(--wood-brown); padding: 20px 50px;
+          font-size: 2rem; font-family: 'Sniglet', cursive; text-decoration: none;
+          border: 4px solid var(--wood-brown); border-radius: 50px; box-shadow: 0 8px 0px var(--wood-brown);
+          transition: 0.2s; display: inline-block; margin-top: 40px;
       }
-      .btn-download:hover { transform: translateY(6px); box-shadow: 0 6px 0px var(--wood-brown); background: #fff; }
+      .btn-download:hover { transform: translateY(4px); box-shadow: 0 4px 0px var(--wood-brown); background: #fff; }
+      .btn-download i { transition: 0.3s; }
+      .btn-download:hover i { animation: shake 0.5s infinite; }
+      @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } 100% { transform: rotate(0deg); } }
 
-      .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
-      .ss-card { border: 4px solid var(--wood-brown); border-radius: 30px; overflow: hidden; height: 320px; }
-      .ss-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-      .ss-card:hover img { transform: scale(1.05); }
+      /* --- SCREENSHOTS --- */
+      .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+      .ss-card { border: 4px solid var(--wood-brown); border-radius: 20px; overflow: hidden; height: 280px; position: relative; }
+      .ss-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
+      .ss-card:hover img { transform: scale(1.1); filter: brightness(1.1); }
 
-      section { padding: 100px 10%; }
-      .ref-heading { font-family: 'Sniglet', cursive; color: var(--wood-brown); font-size: 4rem; text-align: center; margin-bottom: 60px; }
-      footer { background: #fff; padding: 60px; text-align: center; border-top: 5px solid var(--wood-brown); }
+      /* --- REVEAL --- */
+      .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
+      .reveal.active { opacity: 1; transform: translateY(0); }
+
+      footer { background: #fff; padding: 40px; text-align: center; border-top: 5px solid var(--wood-brown); font-family: 'Sniglet', cursive; }
    </style>
 </head>
 <body>
@@ -134,95 +141,93 @@
 </nav>
 
 <section class="hero">
-   <img src="images/jejakbelanglogo.png" alt="Logo" class="game-logo">
+   <img src="images/jejakbelanglogo.png" alt="Jejak Belang Logo" class="game-logo">
 </section>
 
+<div class="tech-bar">
+    <div class="tech-item"><i class="fab fa-unity"></i> Unity URP</div>
+    <div class="tech-item"><i class="fas fa-cube"></i> Blender 3D</div>
+    <div class="tech-item"><i class="fas fa-code"></i> C# Modular Systems</div>
+</div>
+
 <div class="partners-bar">
-   <div class="partners-flex">
-      <img src="images/logodbp.png" alt="Collaborator" class="partner-logo">
-   </div>
+   <img src="images/logodbp.png" alt="Collaborator" class="partner-logo">
 </div>
 
 <section id="technical" class="reveal">
    <h2 class="ref-heading">Technical Pipeline</h2>
+   
    <div class="info-row">
       <img src="images/3d_sculpt.png" class="info-image" alt="3D modeling process">
       <div class="info-content">
-         <h3>01. 3D Modeling</h3>
-         <p>Comprehensive 3D asset creation using Blender. I focus on stylized character sculpting and optimized retopology.</p>
+         <h3>01. Stylized 3D Modeling</h3>
+         <p>Comprehensive 3D asset creation using Blender. I focus on stylized character sculpting, optimized retopology, and texture painting to maintain a consistent cozy aesthetic.</p>
       </div>
    </div>
+
    <div class="info-row">
       <img src="images/unity_ss.png" class="info-image" alt="Unity engine interface">
       <div class="info-content">
-         <h3>02. Unity Development</h3>
-         <p>Implemented in Unity URP with custom shaders and modular C# systems.</p>
+         <h3>02. Unity Engine Development</h3>
+         <p>Developed within the Unity Universal Render Pipeline (URP). Features include custom HLSL shaders for environmental effects and a modular C# event system for gameplay triggers.</p>
       </div>
    </div>
 </section>
 
 <section class="trailer-section">
-   <div class="video-container">
-      <iframe src="https://www.youtube.com/embed/lnccZmlOr3E" frameborder="0" allowfullscreen></iframe>
+   <div class="video-frame">
+       <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/lnccZmlOr3E" frameborder="0" allowfullscreen></iframe>
+       </div>
    </div>
    <a href="#" class="btn-download"><i class="fas fa-gamepad"></i> DOWNLOAD BUILD</a>
 </section>
 
 <section class="reveal">
-   <h2 class="ref-heading">Gameplay Screenshots</h2>
+   <h2 class="ref-heading">Gameplay Gallery</h2>
    <div class="screenshot-grid">
-      <div class="ss-card"><img src="images/screen1.png" alt="Gameplay preview 1"></div>
-      <div class="ss-card"><img src="images/screen2.png" alt="Gameplay preview 2"></div>
-      <div class="ss-card"><img src="images/screen3.png" alt="Gameplay preview 3"></div>
+      <div class="ss-card"><img src="images/screen1.png" alt="Preview 1"></div>
+      <div class="ss-card"><img src="images/screen2.png" alt="Preview 2"></div>
+      <div class="ss-card"><img src="images/screen3.png" alt="Preview 3"></div>
    </div>
 </section>
 
 <footer>
-   <p style="font-size: 1.5rem; font-weight: bold;">Jejak Belang Portfolio | © 2026 Nabil Studio</p>
+   <p style="font-size: 1.2rem;">Jejak Belang Portfolio | © 2026 Nabil Studio</p>
 </footer>
 
 <script>
    window.addEventListener('DOMContentLoaded', () => {
       // Entrance Animation
-      setTimeout(() => { 
-         document.body.classList.add('page-loaded'); 
-      }, 100);
+      setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
-      // Exit Animation (Right to Left Wipe)
+      // Exit Animation Logic
       const transitionLinks = document.querySelectorAll('.transition-link');
       transitionLinks.forEach(link => {
-         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = this.getAttribute('href');
-            
-            // 1. Instantly move shutter to the right side
-            document.body.classList.remove('page-loaded');
-            document.body.classList.add('page-exiting');
+          link.addEventListener('click', function(e) {
+             e.preventDefault();
+             const target = this.getAttribute('href');
+             document.body.classList.remove('page-loaded');
+             document.body.classList.add('page-exiting');
 
-            // 2. Trigger the slide-in from right to center
-            setTimeout(() => {
-               document.body.classList.add('trigger-wipe');
-               // 3. Change page once shutter covers view
-               setTimeout(() => { 
-                  window.location.href = target; 
-               }, 600);
-            }, 50);
-         });
+             setTimeout(() => {
+                document.body.classList.add('trigger-wipe');
+                setTimeout(() => { window.location.href = target; }, 600);
+             }, 50);
+          });
       });
 
-      // Scroll Reveal logic
+      // Scroll Reveal
       function reveal() {
-         const reveals = document.querySelectorAll(".reveal");
-         for (let i = 0; i < reveals.length; i++) {
-            const windowHeight = window.innerHeight;
-            const elementTop = reveals[i].getBoundingClientRect().top;
-            if (elementTop < windowHeight - 150) { 
-               reveals[i].classList.add("active"); 
-            }
-         }
+          const reveals = document.querySelectorAll(".reveal");
+          reveals.forEach(el => {
+             const windowHeight = window.innerHeight;
+             const elementTop = el.getBoundingClientRect().top;
+             if (elementTop < windowHeight - 100) { el.classList.add("active"); }
+          });
       }
       window.addEventListener("scroll", reveal);
-      reveal(); // Check once on load
+      reveal();
    });
 </script>
 
