@@ -11,7 +11,7 @@
     <style>
         :root {
             --fire-red: #d32f2f;
-            --fire-orange: #ff5722;
+            --brand-orange: #ff5e3a; /* Your custom color */
             --caution-yellow: #ffeb3b;
             --smoke-dark: #1a1a1b;
             --asphalt: #2c3e50;
@@ -28,19 +28,32 @@
             overflow-x: hidden; 
         }
 
-        /* --- ORANGE SHUTTER TRANSITIONS --- */
+        /* --- UPDATED SHUTTER LOGIC --- */
         #entrance-shutter {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--fire-orange);
+            background: var(--brand-orange);
             z-index: 10000;
             transform: translateX(0); 
             transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
             pointer-events: none;
         }
 
-        body.page-loaded #entrance-shutter { transform: translateX(100%); }
-        body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
-        body.prepare-exit #entrance-shutter { transform: translateX(100%); transition: none; }
+        /* Entrance: Shutter moves off-screen to the left (Right-to-Left reveal) */
+        body.page-loaded #entrance-shutter { 
+            transform: translateX(-100%); 
+        }
+
+        /* Exit: Shutter comes in from the left to cover screen (Left-to-Right cover) */
+        body.trigger-wipe #entrance-shutter { 
+            transform: translateX(0); 
+            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); 
+        }
+
+        /* Reset state for the exit wipe */
+        body.prepare-exit #entrance-shutter {
+            transform: translateX(-100%);
+            transition: none;
+        }
 
         /* --- NAVIGATION --- */
         .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
@@ -83,7 +96,7 @@
             transition: 0.3s; display: flex; align-items: center; gap: 10px;
             backdrop-filter: blur(5px);
         }
-        .btn-hero:hover { background: white; color: var(--fire-red); }
+        .btn-hero:hover { background: white; color: var(--brand-orange); }
 
         /* --- TECH BAR & PARTNERS --- */
         .tech-bar {
@@ -97,46 +110,39 @@
             border-bottom: 4px solid var(--fire-red);
         }
         .partner-logo { height: 60px; width: auto; filter: grayscale(100%); opacity: 0.7; transition: 0.4s; }
+        .partner-logo:hover { filter: grayscale(0%); opacity: 1; }
 
-        /* --- CONTENT SECTIONS --- */
+        /* --- ZIG ZAG PIPELINE --- */
         section { padding: 80px 10%; }
+        .ref-heading { font-family: 'Bebas Neue'; color: white; font-size: 4rem; text-align: center; margin-bottom: 50px; }
+        
+        .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
+        .info-row:nth-child(even) { flex-direction: row-reverse; }
+        .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(40%); transition: 0.5s; }
+        .info-row:hover .info-image { filter: grayscale(0%); }
+        .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
+        .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--brand-orange); margin-bottom: 15px; }
+        .tool-label { color: var(--caution-yellow); text-transform: uppercase; font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
+
+        /* --- REMAINING CONTENT --- */
         .overview-card {
             background: var(--asphalt); margin: -50px auto 40px; max-width: 1000px;
-            padding: 60px; border-left: 10px solid var(--fire-red);
+            padding: 60px; border-left: 10px solid var(--brand-orange);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative;
         }
         .overview-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes); }
-        .overview-card h2 { font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px; }
-        .overview-card p { font-size: 1.3rem; line-height: 1.6; color: #bdc3c7; }
-
-        .ref-heading { font-family: 'Bebas Neue'; color: white; font-size: 4rem; text-align: center; margin-bottom: 50px; }
-        
-        /* ZIG ZAG LAYOUT */
-        .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
-        .info-row:nth-child(even) { flex-direction: row-reverse; }
-        .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(30%); transition: 0.5s; }
-        .info-row:hover .info-image { filter: grayscale(0%); }
-        .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
-        .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--fire-orange); margin-bottom: 15px; }
-        .tool-label { color: var(--caution-yellow); text-transform: uppercase; font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
-
-        /* TRAILER & GALLERY */
-        .trailer-section { background: #111; border-top: 5px solid var(--fire-red); }
-        .video-frame { max-width: 1100px; margin: 0 auto; background: #000; padding: 10px; border: 1px solid #333; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .ss-card { border: 2px solid #333; filter: brightness(0.8) contrast(1.2); transition: 0.4s; }
+        .ss-card { border: 2px solid #333; transition: 0.4s; }
         .ss-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ss-card:hover { filter: brightness(1); border-color: var(--fire-red); transform: scale(1.02); }
+        .ss-card:hover { border-color: var(--brand-orange); transform: scale(1.02); }
 
         .reveal { opacity: 0; transform: translateY(30px); transition: 0.6s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         #backToTop {
             position: fixed; bottom: 30px; right: 30px;
-            background: var(--fire-red); color: white; width: 50px; height: 50px;
+            background: var(--brand-orange); color: white; width: 50px; height: 50px;
             display: flex; justify-content: center; align-items: center;
             cursor: pointer; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 999;
         }
@@ -162,16 +168,16 @@
    <p>Advanced Firefighting Simulation & Training</p>
    <div class="hero-nav">
       <a href="#about" class="btn-hero"><i class="fas fa-bullhorn"></i> MISSION</a>
-      <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> TECHNICAL OVERVIEW</a>
+      <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> PIPELINE</a>
       <a href="#trailer" class="btn-hero"><i class="fas fa-eye"></i> TEASER</a>
       <a href="#gallery" class="btn-hero"><i class="fas fa-layer-group"></i> GALLERY</a>
    </div>
 </section>
 
 <div class="tech-bar">
-    <div class="tech-item"><i class="fas fa-vr-cardboard"></i> Meta Quest 3 / OpenXR</div>
+    <div class="tech-item"><i class="fas fa-vr-cardboard"></i> Meta Quest 3</div>
     <div class="tech-item"><i class="fab fa-unity"></i> Unity URP</div>
-    <div class="tech-item"><i class="fas fa-microchip"></i> Artificial Intelligence</div>
+    <div class="tech-item"><i class="fas fa-microchip"></i> AI Support</div>
 </div>
 
 <div class="partners-bar">
@@ -182,9 +188,9 @@
 
 <section id="about" class="reveal">
     <div class="overview-card">
-        <h2>Tactical Simulation</h2>
-        <p>
-            <b>FLAIMEVR</b> is an immersive virtual reality simulation that integrates hands-on firefighting operations with real-time strategic (RTS) decision-making. Designed for both training and engagement, it challenges users to manage resources and adapt to volatile environments.
+        <h2 style="font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px;">Tactical Simulation</h2>
+        <p style="font-size: 1.3rem; line-height: 1.6; color: #bdc3c7;">
+            <b>FLAIMEVR</b> is an immersive virtual reality simulation integrating hands-on firefighting operations with real-time strategic decision-making. 
         </p>
     </div>
 </section>
@@ -195,9 +201,9 @@
    <div class="info-row">
       <img src="images/vr_interaction.png" class="info-image" alt="VR Mechanics">
       <div class="info-content">
-         <div class="tool-label">C# / XR Interaction Toolkit</div>
-         <h3>01. Physics-Based Interaction</h3>
-         <p>Developed custom grab mechanics for heavy equipment utilizing two-handed interaction logic and haptic feedback profiles to simulate realistic weight.</p>
+         <div class="tool-label">C# / XR Toolkit</div>
+         <h3>01. Physics Interaction</h3>
+         <p>Developed custom grab mechanics for heavy equipment utilizing haptic feedback profiles to simulate realistic weight and tension.</p>
       </div>
    </div>
 
@@ -205,8 +211,8 @@
       <img src="images/ai_logic.png" class="info-image" alt="AI Decision Support">
       <div class="info-content">
          <div class="tool-label">Unity AI / Behavior Trees</div>
-         <h3>02. AI Decision Support</h3>
-         <p>Integrated an AI-driven environmental data system that provides real-time updates on fire behavior and weather, assisting players in tactical decision-making.</p>
+         <h3>02. AI-Driven Strategy</h3>
+         <p>Integrated an AI environmental system that provides real-time updates on fire propagation and weather behavior for the RTS layer.</p>
       </div>
    </div>
 
@@ -214,27 +220,25 @@
       <img src="images/environment_design.png" class="info-image" alt="Environment Design">
       <div class="info-content">
          <div class="tool-label">Substance / PBR Workflow</div>
-         <h3>03. Industrial Asset Design</h3>
-         <p>Modeled high-detail, low-poly environments optimized for standalone VR. PBR workflows ensure soot, water, and metal react accurately to dynamic heat light.</p>
+         <h3>03. Visual Optimization</h3>
+         <p>PBR workflows ensure soot, water, and metal react accurately to dynamic heat light while remaining optimized for mobile VR chipsets.</p>
       </div>
    </div>
 
    <div class="info-row">
       <img src="images/scenario_manager.png" class="info-image" alt="Scenario Logic">
       <div class="info-content">
-         <div class="tool-label">ScriptableObjects / Event System</div>
-         <h3>04. Dynamic Scenario Manager</h3>
-         <p>Architected a modular event system allowing for procedural hazards like chemical explosions or wind shifts, ensuring no two training missions are the same.</p>
+         <div class="tool-label">ScriptableObjects / Events</div>
+         <h3>04. Event Systems</h3>
+         <p>Architected a modular event system for procedural hazards like chemical explosions or wind shifts, ensuring dynamic mission variety.</p>
       </div>
    </div>
 </section>
 
-
-
-<section id="trailer" class="trailer-section">
-   <div class="video-frame">
-       <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgUD" frameborder="0" allowfullscreen></iframe>
+<section id="trailer" style="background: #111; padding: 80px 10%;">
+   <div style="max-width: 1100px; margin: 0 auto; background: #000; padding: 10px; border: 1px solid #333;">
+       <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgUD" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
        </div>
    </div>
 </section>
@@ -253,27 +257,29 @@
 
 <footer>
    <div class="hazard-line"></div>
-   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">RESCUE POINT VR | Developed by Nabil</p>
-   <p style="color: #666; margin-top: 10px;">FlaimeVR | nabil hakimi</p>
+   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | Developed by Nabil</p>
 </footer>
 
 <script>
    window.addEventListener('DOMContentLoaded', () => {
-      // Intro: Left to Right
+      // Intro: Right to Left reveal
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
-      // Exit: Right to Left
+      // Exit: Left to Right cover
       const transitionLinks = document.querySelectorAll('.transition-link');
       transitionLinks.forEach(link => {
           link.addEventListener('click', function(e) {
               e.preventDefault();
               const target = this.href;
+              
               document.body.classList.remove('page-loaded');
               document.body.classList.add('prepare-exit');
+              
               setTimeout(() => {
                 document.body.classList.remove('prepare-exit');
                 document.body.classList.add('trigger-wipe');
               }, 20);
+
               setTimeout(() => { window.location.href = target; }, 750);
           });
       });
