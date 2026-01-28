@@ -109,35 +109,37 @@
         .tech-item i { color: var(--brand-orange); font-size: 1.8rem; }
 
         .collaborators {
-            background: #111; padding: 30px; display: flex; flex-direction: column; align-items: center;
+            background: #111; padding: 40px 10%; display: flex; flex-direction: column; align-items: center;
             border-bottom: 2px solid #333;
         }
-        .collaborators span { font-family: 'Bebas Neue'; color: #666; margin-bottom: 20px; letter-spacing: 3px; }
-        .logo-flex { display: flex; gap: 60px; align-items: center; justify-content: center; flex-wrap: wrap; }
-        .collab-logo { 
-            height: 70px; width: auto; 
-            filter: grayscale(100%) brightness(1.5); 
-            transition: 0.4s ease; opacity: 0.7; 
+        .collaborators span { font-family: 'Bebas Neue'; color: #666; margin-bottom: 25px; letter-spacing: 3px; }
+        
+        .logo-flex { 
+            display: flex; gap: 80px; align-items: center; justify-content: center; flex-wrap: wrap; 
+            background: rgba(255, 255, 255, 0.02); padding: 30px 60px; border-radius: 15px;
         }
-        .collab-logo:hover { filter: grayscale(0%) brightness(1); opacity: 1; transform: scale(1.05); }
+        .collab-logo { 
+            height: 75px; width: auto; 
+            filter: invert(1) brightness(2); /* FIX FOR BLACK LOGOS */
+            transition: 0.4s ease; opacity: 0.8; 
+        }
+        .collab-logo:hover { 
+            filter: invert(1) brightness(1) drop-shadow(0 0 15px var(--brand-orange)); 
+            opacity: 1; transform: scale(1.1); 
+        }
 
-        /* --- CONTENT SECTIONS --- */
+        /* --- PIPELINE ZIGZAG --- */
         section { padding: 80px 10%; }
         .ref-heading { font-family: 'Bebas Neue'; color: white; font-size: 4rem; text-align: center; margin-bottom: 50px; }
         
-        .overview-card {
-            background: var(--asphalt); margin: -50px auto 40px; max-width: 1000px;
-            padding: 60px; border-left: 10px solid var(--brand-orange);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative;
-        }
-        .overview-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes); }
-
         .info-row { display: flex; align-items: stretch; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
-        .info-row:nth-child(even) { flex-direction: row-reverse; }
+        .info-row:nth-child(even) { flex-direction: row-reverse; } /* AUTOMATIC ZIGZAG */
+        
         .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(40%); transition: 0.5s; }
         .info-row:hover .info-image { filter: grayscale(0%); }
         .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
         .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--brand-orange); margin-bottom: 15px; }
+        .info-content p { font-size: 1.2rem; line-height: 1.6; color: #ccc; }
 
         /* --- TRAILER & GALLERY --- */
         .trailer-section { background: #111; padding: 80px 10%; text-align: center; }
@@ -207,9 +209,9 @@
 </div>
 
 <section id="about" class="reveal">
-    <div class="overview-card">
+    <div style="background: var(--asphalt); margin: 0 auto; max-width: 1000px; padding: 60px; border-left: 10px solid var(--brand-orange); position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
         <h2 style="font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px;">Tactical Simulation</h2>
-        <p><b>FLAIMEVR</b> is an immersive virtual reality simulation integrating hands-on firefighting operations with real-time strategic decision-making.</p>
+        <p style="font-size: 1.4rem; line-height: 1.6;"><b>FLAIMEVR</b> is an immersive virtual reality simulation integrating hands-on firefighting operations with real-time strategic decision-making.</p>
     </div>
 </section>
 
@@ -220,31 +222,31 @@
       <img src="images/blenderfvr.png" class="info-image">
       <div class="info-content">
          <h3>01. 3D Modelling</h3>
-         <p>Comprehensive environmental and model 3D asset creation using Blender. Focusing on making the model as accurate as possible with real life model.</p>
+         <p>Comprehensive environmental and model 3D asset creation using Blender. Focusing on making the model as accurate as possible with real-life equipment.</p>
       </div>
    </div>
 
    <div class="info-row">
       <img src="images/unityfvr.png" class="info-image">
       <div class="info-content">
-         <h3>02. Unity development</h3>
-         <p>Developed within the Unity Universal Render Pipeline (URP). Features include custom HLSL shaders for environmental effects and a modular C# event system for XR Integration and triggers.</p>
+         <h3>02. Unity Development</h3>
+         <p>Developed within the Universal Render Pipeline (URP). Features include custom HLSL shaders for environmental effects and modular event systems for XR triggers.</p>
       </div>
    </div>
 
    <div class="info-row">
       <img src="images/fvr6.png" class="info-image">
       <div class="info-content">
-         <h3>03. Ai Integration</h3>
-         <p>Using Gemini as API, the system includes an AI assistant for user to use in the system.</p>
+         <h3>03. AI Integration</h3>
+         <p>Using the Gemini API, the system includes an intelligent assistant to guide users through complex training protocols in real-time.</p>
       </div>
    </div>
 
    <div class="info-row">
       <img src="images/vscfvr.png" class="info-image">
       <div class="info-content">
-         <h3>04. Visual Studio Code</h3>
-         <p>Programming logic utilizing C#. Clean, documented code structure designed for modularity and scalability within the Unity environment.</p>
+         <h3>04. Programming Logic</h3>
+         <p>Logic utilizing C# via VS Code. Clean, documented code structure designed for modularity and scalability within the simulation environment.</p>
       </div>
    </div>
 </section>
@@ -261,15 +263,14 @@
 <section id="gallery" class="reveal">
    <h2 class="ref-heading">System Gallery</h2>
    <div class="screenshot-grid">
-      <div class="ss-card"><img src="fvr1.png"></div>
-      <div class="ss-card"><img src="fvr2.png"></div>
-      <div class="ss-card"><img src="fvr3.png"></div>
-      <div class="ss-card"><img src="fvr4.png"></div>
-      <div class="ss-card"><img src="fvr5.png"></div>
-      <div class="ss-card"><img src="fvr6.png"></div>
-      <div class="ss-card"><img src="fvr7.png"></div>
-      <div class="ss-card"><img src="fvr8.png"></div>
-       
+      <div class="ss-card"><img src="images/fvr1.png"></div>
+      <div class="ss-card"><img src="images/fvr2.png"></div>
+      <div class="ss-card"><img src="images/fvr3.png"></div>
+      <div class="ss-card"><img src="imagesfvr4.png"></div>
+      <div class="ss-card"><img src="images/fvr5.png"></div>
+      <div class="ss-card"><img src="images/fvr6.png"></div>
+      <div class="ss-card"><img src="images/fvr7.png"></div>
+      <div class="ss-card"><img src="images/fvr8.png"></div>
    </div>
 </section>
 
