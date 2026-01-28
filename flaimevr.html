@@ -67,7 +67,6 @@
         @keyframes rise {
             0% { transform: translateY(0) scale(1); opacity: 0; }
             20% { opacity: 0.8; }
-            80% { opacity: 0.4; }
             100% { transform: translateY(-110vh) scale(0.3); opacity: 0; }
         }
 
@@ -99,27 +98,28 @@
         }
         .btn-hero:hover { background: white; color: var(--brand-orange); }
 
-        /* --- BACK TO TOP --- */
-        #backToTop {
-            position: fixed; bottom: 30px; right: 30px;
-            background: var(--brand-orange); color: white; width: 60px; height: 60px;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; border: 4px solid var(--caution-yellow); opacity: 0;
-            visibility: hidden; transition: 0.3s; z-index: 999; font-size: 1.5rem;
-        }
-        #backToTop.show { opacity: 1; visibility: visible; }
-
-        /* --- TECH STACK BAR (FIXED) --- */
+        /* --- TECH BAR & COLLABORATORS --- */
         .tech-bar {
             background: #000; color: var(--caution-yellow);
             padding: 25px; display: flex; justify-content: center; gap: 50px;
-            font-family: 'Bebas Neue', cursive; font-size: 1.5rem;
-            border-top: 4px solid var(--fire-red); border-bottom: 2px solid #333;
-            letter-spacing: 2px; flex-wrap: wrap;
+            font-family: 'Bebas Neue'; font-size: 1.5rem;
+            border-top: 4px solid var(--fire-red); letter-spacing: 2px; flex-wrap: wrap;
         }
-        .tech-item { display: flex; align-items: center; gap: 12px; transition: 0.3s; }
+        .tech-item { display: flex; align-items: center; gap: 12px; }
         .tech-item i { color: var(--brand-orange); font-size: 1.8rem; }
-        .tech-item:hover { color: #fff; transform: translateY(-2px); }
+
+        .collaborators {
+            background: #111; padding: 30px; display: flex; flex-direction: column; align-items: center;
+            border-bottom: 2px solid #333;
+        }
+        .collaborators span { font-family: 'Bebas Neue'; color: #666; margin-bottom: 20px; letter-spacing: 3px; }
+        .logo-flex { display: flex; gap: 60px; align-items: center; justify-content: center; flex-wrap: wrap; }
+        .collab-logo { 
+            height: 70px; width: auto; 
+            filter: grayscale(100%) brightness(1.5); 
+            transition: 0.4s ease; opacity: 0.7; 
+        }
+        .collab-logo:hover { filter: grayscale(0%) brightness(1); opacity: 1; transform: scale(1.05); }
 
         /* --- CONTENT SECTIONS --- */
         section { padding: 80px 10%; }
@@ -131,31 +131,36 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative;
         }
         .overview-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes); }
-        .overview-card p { font-size: 1.4rem; line-height: 1.6; color: #bdc3c7; }
 
-        .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
+        .info-row { display: flex; align-items: stretch; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
         .info-row:nth-child(even) { flex-direction: row-reverse; }
         .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(40%); transition: 0.5s; }
         .info-row:hover .info-image { filter: grayscale(0%); }
         .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
         .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--brand-orange); margin-bottom: 15px; }
-        .info-content p { font-size: 1.2rem; line-height: 1.5; color: #ccc; }
 
-        /* --- TRAILER SECTION --- */
+        /* --- TRAILER & GALLERY --- */
         .trailer-section { background: #111; padding: 80px 10%; text-align: center; }
         .video-wrapper {
             max-width: 1000px; margin: 0 auto; background: #000; padding: 12px; 
             border: 5px solid var(--fire-red); border-radius: 15px;
-            box-shadow: 0 0 30px rgba(211, 47, 47, 0.4);
         }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* --- GALLERY --- */
         .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         .ss-card { border: 2px solid #333; overflow: hidden; transition: 0.4s; aspect-ratio: 16/9; }
         .ss-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: 0.5s; }
         .ss-card:hover img { transform: scale(1.1); }
+
+        #backToTop {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--brand-orange); color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; border: 4px solid var(--caution-yellow); opacity: 0;
+            visibility: hidden; transition: 0.3s; z-index: 999;
+        }
+        #backToTop.show { opacity: 1; visibility: visible; }
 
         .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -178,7 +183,7 @@
 <section class="hero">
    <div class="fire-particles" id="fireParticles"></div>
    <img src="images/flaimelogo.png" alt="FLAIMEVR" class="hero-logo">
-   <p>Advanced Firefighting Simulation & Training</p>
+   <p>Firefighting Simulation & Training</p>
    <div class="hero-nav">
       <a href="#about" class="btn-hero"><i class="fas fa-bullhorn"></i> MISSION</a>
       <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> PIPELINE</a>
@@ -191,15 +196,20 @@
     <div class="tech-item"><i class="fab fa-unity"></i><span>UNITY URP</span></div>
     <div class="tech-item"><i class="fas fa-vr-cardboard"></i><span>META QUEST 3</span></div>
     <div class="tech-item"><i class="fas fa-code"></i><span>C# MODULAR SYSTEMS</span></div>
-    <div class="tech-item"><i class="fas fa-fire"></i><span>REAL-TIME SIMULATION</span></div>
+</div>
+
+<div class="collaborators">
+    <span>OFFICIAL COLLABORATORS</span>
+    <div class="logo-flex">
+        <img src="images/dicelogo.png" alt="UTHM" class="collab-logo">
+        <img src="images/bombalogo.png" alt="BOMBA" class="collab-logo">
+    </div>
 </div>
 
 <section id="about" class="reveal">
     <div class="overview-card">
         <h2 style="font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px;">Tactical Simulation</h2>
-        <p>
-            <b>FLAIMEVR</b> is an immersive virtual reality simulation designed to bridge the gap between classroom theory and high-risk field operations. By integrating hands-on firefighting mechanics with real-time strategic decision-making, it provides a safe yet intense training environment for the next generation of responders.
-        </p>
+        <p><b>FLAIMEVR</b> is an immersive virtual reality simulation integrating hands-on firefighting operations with real-time strategic decision-making.</p>
     </div>
 </section>
 
@@ -207,18 +217,34 @@
    <h2 class="ref-heading">Development Pipeline</h2>
    
    <div class="info-row">
-      <img src="images/vr_interaction.png" class="info-image" alt="VR Mechanics">
+      <img src="images/vr_interaction.png" class="info-image">
       <div class="info-content">
          <h3>01. Physics Interaction</h3>
-         <p>Developed custom grab mechanics for heavy equipment utilizing haptic feedback profiles to simulate realistic weight and tension.</p>
+         <p>Custom grab mechanics for heavy equipment with haptic feedback profiles to simulate realistic hose tension.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/ai_logic.png" class="info-image" alt="AI Logic">
+      <img src="images/fire_system.png" class="info-image">
       <div class="info-content">
-         <h3>02. AI-Driven Strategy</h3>
-         <p>Integrated an AI environmental system that provides real-time updates on fire propagation and weather behavior for the RTS layer.</p>
+         <h3>02. Dynamic Propagation</h3>
+         <p>Cellular automata-based fire simulation that reacts to material combustion and ambient oxygen levels.</p>
+      </div>
+   </div>
+
+   <div class="info-row">
+      <img src="images/rts_layer.png" class="info-image">
+      <div class="info-content">
+         <h3>03. Tactical Overlay</h3>
+         <p>Real-time holographic RTS interface for incident commanders to monitor and deploy AI assets safely.</p>
+      </div>
+   </div>
+
+   <div class="info-row">
+      <img src="images/multiplayer.png" class="info-image">
+      <div class="info-content">
+         <h3>04. Networked Training</h3>
+         <p>Collaborative multiplayer drills allowing nozzles and tactical leaders to train in a synchronized VR space.</p>
       </div>
    </div>
 </section>
@@ -227,7 +253,7 @@
    <h2 class="ref-heading">Official Teaser</h2>
    <div class="video-wrapper">
        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgU" frameborder="0" allowfullscreen></iframe>
        </div>
    </div>
 </section>
@@ -235,33 +261,35 @@
 <section id="gallery" class="reveal">
    <h2 class="ref-heading">System Gallery</h2>
    <div class="screenshot-grid">
-      <div class="ss-card"><img src="images/vr1.png"></div>
-      <div class="ss-card"><img src="images/vr2.png"></div>
-      <div class="ss-card"><img src="images/vr3.png"></div>
-      <div class="ss-card"><img src="images/vr4.png"></div>
-      <div class="ss-card"><img src="images/vr5.png"></div>
-      <div class="ss-card"><img src="images/vr6.png"></div>
+      <div class="ss-card"><img src="fvr1.png"></div>
+      <div class="ss-card"><img src="fvr2.png"></div>
+      <div class="ss-card"><img src="fvr3.png"></div>
+      <div class="ss-card"><img src="fvr4.png"></div>
+      <div class="ss-card"><img src="fvr5.png"></div>
+      <div class="ss-card"><img src="fvr6.png"></div>
+      <div class="ss-card"><img src="fvr7.png"></div>
+      <div class="ss-card"><img src="fvr8.png"></div>
+      <div class="ss-card"><img src="fvr9.png"></div>
    </div>
 </section>
 
 <footer>
    <div class="hazard-line"></div>
-   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | © 2026 Nabil Studio</p>
+   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | Nabil Hakimi</p>
 </footer>
 
 <script>
    function initFire() {
        const container = document.getElementById('fireParticles');
        for (let i = 0; i < 50; i++) {
-           const particle = document.createElement('div');
-           particle.className = 'particle';
+           const p = document.createElement('div');
+           p.className = 'particle';
            const size = Math.random() * 7 + 2 + 'px';
-           particle.style.width = size;
-           particle.style.height = size;
-           particle.style.left = Math.random() * 100 + '%';
-           particle.style.animationDuration = Math.random() * 3 + 2 + 's';
-           particle.style.animationDelay = Math.random() * 5 + 's';
-           container.appendChild(particle);
+           p.style.width = size; p.style.height = size;
+           p.style.left = Math.random() * 100 + '%';
+           p.style.animationDuration = Math.random() * 3 + 2 + 's';
+           p.style.animationDelay = Math.random() * 5 + 's';
+           container.appendChild(p);
        }
    }
 
