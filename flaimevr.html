@@ -28,21 +28,32 @@
             overflow-x: hidden; 
         }
 
-        /* --- ORIGINAL HORIZONTAL SHUTTER --- */
+        /* --- UPDATED ORANGE SHUTTER TRANSITIONS --- */
         #entrance-shutter {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--fire-red); z-index: 10000;
-            transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            background: var(--fire-orange); /* Transition color is now Orange */
+            z-index: 10000;
+            transform: translateX(0); 
+            transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
             pointer-events: none;
-            display: flex; align-items: center; justify-content: center;
         }
-        #entrance-shutter::after {
-            content: "INITIALIZING MISSION";
-            color: white; font-family: 'Bebas Neue'; font-size: 2rem; letter-spacing: 5px;
+
+        /* Intro: Left to Right (shutter moves off-screen to the right) */
+        body.page-loaded #entrance-shutter { 
+            transform: translateX(100%); 
         }
-        body.page-loaded #entrance-shutter { transform: translateX(-100%); }
-        body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
-        body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
+
+        /* Exit: Right to Left (shutter comes in from the right to cover screen) */
+        body.trigger-wipe #entrance-shutter { 
+            transform: translateX(0); 
+            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); 
+        }
+
+        /* Preparation state for the exit wipe */
+        body.prepare-exit #entrance-shutter {
+            transform: translateX(100%);
+            transition: none;
+        }
 
         /* --- NAVIGATION --- */
         .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
@@ -177,7 +188,7 @@
 <div class="tech-bar">
     <div class="tech-item"><i class="fas fa-vr-cardboard"></i> Meta Quest 3 / OpenXR</div>
     <div class="tech-item"><i class="fab fa-unity"></i> Unity URP</div>
-    <div class="tech-item"><i class="fas fa-fire-extinguisher"></i> Artificial Intelligence</div>
+    <div class="tech-item"><i class="fas fa-microchip"></i> Artificial Intelligence</div>
 </div>
 
 <div class="partners-bar">
@@ -190,7 +201,7 @@
     <div class="overview-card">
         <h2>Tactical Simulation</h2>
         <p>
-            <b>FLAIMEVR</b>  is an immersive virtual reality simulation that integrates hands-on firefighting operations with real-time strategic (RTS) decision-making to provide a realistic and educational experience in fire management. Designed as both a training tool and an engaging game, FlaimeVR challenges players to manage resources, deploy firefighting units, and adapt to dynamic environmental conditions. Players experience diverse scenarios—from containing small-scale house fires to controlling fast-spreading wildfires and managing complex industrial emergencies—while facing hazards such as chemical explosions and shifting wind patterns. The inclusion of AI-driven environmental data enhances situational awareness by providing real-time updates on fire behaviour, weather conditions, and operational consequences. This combination of realistic VR immersion, strategic resource management, and AI-assisted decision support creates a unique platform for developing crisis management, leadership, and problem-solving skills.
+            <b>FLAIMEVR</b> is an immersive virtual reality simulation that integrates hands-on firefighting operations with real-time strategic (RTS) decision-making...
         </p>
     </div>
 </section>
@@ -206,8 +217,6 @@
       </div>
    </div>
 </section>
-
-
 
 <section id="trailer" class="trailer-section">
    <div class="video-frame">
@@ -237,17 +246,27 @@
 
 <script>
    window.addEventListener('DOMContentLoaded', () => {
-      // Intro Transition (Horizontal Wipe)
+      // Intro Transition: Shutter moves Left to Right
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
-      // Home/Exit Button Wipe Transition logic
+      // Home/Exit Button: Shutter moves Right to Left
       const transitionLinks = document.querySelectorAll('.transition-link');
       transitionLinks.forEach(link => {
           link.addEventListener('click', function(e) {
               e.preventDefault();
               const target = this.href;
-              document.body.classList.add('trigger-wipe');
-              setTimeout(() => { window.location.href = target; }, 600);
+              
+              // Prepare shutter at the right side instantly
+              document.body.classList.remove('page-loaded');
+              document.body.classList.add('prepare-exit');
+              
+              // Force trigger the Right-to-Left slide
+              setTimeout(() => {
+                document.body.classList.remove('prepare-exit');
+                document.body.classList.add('trigger-wipe');
+              }, 10);
+
+              setTimeout(() => { window.location.href = target; }, 700);
           });
       });
 
