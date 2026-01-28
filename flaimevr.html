@@ -35,12 +35,53 @@
             transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
             pointer-events: none;
         }
-        /* Entrance: Right to Left reveal */
         body.page-loaded #entrance-shutter { transform: translateX(-100%); }
-        /* Exit setup: Prepare shutter for wipe */
         body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
-        /* Exit: Left to Right cover */
         body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
+
+        /* --- HERO SECTION & PARTICLES --- */
+        .hero {
+            position: relative; height: 100vh;
+            background: url('images/flaimeposter.png') center/cover no-repeat;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            border-bottom: 10px solid var(--fire-red);
+            overflow: hidden;
+        }
+        .hero::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.55); z-index: 1;
+        }
+
+        /* Particle Container */
+        .fire-particles {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2; /* Between background and logo */
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute; bottom: -10px;
+            background: var(--brand-orange);
+            border-radius: 50%; opacity: 0;
+            filter: blur(1px);
+            animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-110vh) scale(0.2); opacity: 0; }
+        }
+
+        .hero-logo {
+            position: relative; z-index: 3; width: 85%; max-width: 650px;
+            filter: drop-shadow(0 0 20px rgba(255, 94, 58, 0.5));
+            margin-bottom: 20px; transition: transform 0.3s ease;
+        }
+        .hero p { 
+            position: relative; z-index: 3; font-family: 'Bebas Neue'; font-size: 1.8rem; 
+            text-transform: uppercase; color: var(--caution-yellow); 
+            letter-spacing: 4px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+        .hero-nav { position: relative; z-index: 3; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
 
         /* --- NAVIGATION --- */
         .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
@@ -52,40 +93,7 @@
         }
         .btn-nav:hover { background: var(--smoke-dark); color: var(--caution-yellow); border-color: var(--caution-yellow); }
 
-        /* --- HERO SECTION --- */
-        .hero {
-            position: relative; height: 100vh;
-            background: url('images/flaimeposter.png') center/cover no-repeat;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-            border-bottom: 10px solid var(--fire-red);
-        }
-        .hero::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.55); z-index: 1;
-        }
-
-        .hero-logo {
-            position: relative; z-index: 2; width: 85%; max-width: 650px;
-            filter: drop-shadow(0 0 20px rgba(211, 47, 47, 0.7));
-            margin-bottom: 20px; transition: transform 0.3s ease;
-        }
-        .hero p { 
-            position: relative; z-index: 2; font-family: 'Bebas Neue'; font-size: 1.8rem; 
-            text-transform: uppercase; color: var(--caution-yellow); 
-            letter-spacing: 4px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-        }
-
-        .hero-nav { position: relative; z-index: 2; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
-        .btn-hero {
-            background: rgba(0,0,0,0.5); color: white; padding: 15px 35px;
-            text-decoration: none; font-family: 'Bebas Neue';
-            font-size: 1.4rem; border: 2px solid white;
-            transition: 0.3s; display: flex; align-items: center; gap: 10px;
-            backdrop-filter: blur(5px);
-        }
-        .btn-hero:hover { background: white; color: var(--brand-orange); }
-
-        /* --- BACK TO TOP (INDUSTRIAL SYNC) --- */
+        /* --- OTHER UI ELEMENTS --- */
         #backToTop {
             position: fixed; bottom: 30px; right: 30px;
             background: var(--brand-orange); color: white; width: 60px; height: 60px;
@@ -95,10 +103,18 @@
         }
         #backToTop.show { opacity: 1; visibility: visible; }
 
-        /* --- ZIG ZAG PIPELINE --- */
+        .btn-hero {
+            background: rgba(0,0,0,0.5); color: white; padding: 15px 35px;
+            text-decoration: none; font-family: 'Bebas Neue';
+            font-size: 1.4rem; border: 2px solid white;
+            transition: 0.3s; display: flex; align-items: center; gap: 10px;
+            backdrop-filter: blur(5px);
+        }
+        .btn-hero:hover { background: white; color: var(--brand-orange); }
+
+        /* --- PIPELINE & CONTENT --- */
         section { padding: 80px 10%; }
         .ref-heading { font-family: 'Bebas Neue'; color: white; font-size: 4rem; text-align: center; margin-bottom: 50px; }
-        
         .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
         .info-row:nth-child(even) { flex-direction: row-reverse; }
         .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(40%); transition: 0.5s; }
@@ -118,7 +134,6 @@
         .ss-card { border: 2px solid #333; transition: 0.4s; overflow: hidden;}
         .ss-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: 0.5s; }
         .ss-card:hover img { transform: scale(1.1); }
-        .ss-card:hover { border-color: var(--brand-orange); }
 
         .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -139,6 +154,7 @@
 </nav>
 
 <section class="hero">
+   <div class="fire-particles" id="particleContainer"></div>
    <img src="images/flaimelogo.png" alt="FLAIMEVR" class="hero-logo">
    <p>Advanced Firefighting Simulation & Training</p>
    <div class="hero-nav">
@@ -166,7 +182,6 @@
 
 <section id="technical" class="reveal">
    <h2 class="ref-heading">Development Pipeline</h2>
-   
    <div class="info-row">
       <img src="images/vr_interaction.png" class="info-image" alt="VR Mechanics">
       <div class="info-content">
@@ -175,7 +190,6 @@
          <p>Developed custom grab mechanics for heavy equipment utilizing haptic feedback profiles to simulate realistic weight and tension.</p>
       </div>
    </div>
-
    <div class="info-row">
       <img src="images/ai_logic.png" class="info-image" alt="AI Decision Support">
       <div class="info-content">
@@ -184,7 +198,6 @@
          <p>Integrated an AI environmental system that provides real-time updates on fire propagation and weather behavior for the RTS layer.</p>
       </div>
    </div>
-
    <div class="info-row">
       <img src="images/environment_design.png" class="info-image" alt="Environment Design">
       <div class="info-content">
@@ -193,7 +206,6 @@
          <p>PBR workflows ensure soot, water, and metal react accurately to dynamic heat light while remaining optimized for mobile VR chipsets.</p>
       </div>
    </div>
-
    <div class="info-row">
       <img src="images/scenario_manager.png" class="info-image" alt="Scenario Logic">
       <div class="info-content">
@@ -230,20 +242,37 @@
 </footer>
 
 <script>
+   // --- PARTICLE GENERATOR ---
+   function createParticles() {
+       const container = document.getElementById('particleContainer');
+       const count = 40;
+       for (let i = 0; i < count; i++) {
+           const particle = document.createElement('div');
+           particle.className = 'particle';
+           
+           const size = Math.random() * 6 + 2 + 'px';
+           particle.style.width = size;
+           particle.style.height = size;
+           
+           particle.style.left = Math.random() * 100 + '%';
+           particle.style.animationDuration = Math.random() * 3 + 2 + 's';
+           particle.style.animationDelay = Math.random() * 5 + 's';
+           
+           container.appendChild(particle);
+       }
+   }
+
    window.addEventListener('DOMContentLoaded', () => {
-      // Entrance Swipe (Right to Left reveal)
+      createParticles();
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
-      // Synced Exit Swipe Logic
       const transitionLinks = document.querySelectorAll('.transition-link');
       transitionLinks.forEach(link => {
           link.addEventListener('click', function(e) {
               e.preventDefault();
               const target = this.getAttribute('href');
-              
               document.body.classList.remove('page-loaded');
               document.body.classList.add('page-exiting');
-              
               setTimeout(() => {
                 document.body.classList.add('trigger-wipe');
                 setTimeout(() => { window.location.href = target; }, 600);
@@ -251,7 +280,6 @@
           });
       });
 
-      // Back to Top Logic (Industrial Icon)
       const btt = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
          if (window.pageYOffset > 300) { btt.classList.add('show'); } 
@@ -259,7 +287,6 @@
       });
       btt.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-      // Scroll Reveal logic
       function reveal() {
           const reveals = document.querySelectorAll(".reveal");
           reveals.forEach(el => {
