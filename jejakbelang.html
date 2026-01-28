@@ -95,6 +95,18 @@
       .info-content { flex: 1; }
       .info-content h3 { font-family: 'Sniglet', cursive; font-size: 2.5rem; color: var(--wood-light); margin-bottom: 10px; }
       .info-content p { font-size: 1.4rem; line-height: 1.5; }
+      
+      /* New Tool Label Style */
+      .tool-label { 
+          display: inline-block; 
+          background: var(--bg-warm); 
+          padding: 4px 12px; 
+          border-radius: 8px; 
+          border: 2px solid var(--wood-brown); 
+          font-weight: bold; 
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+      }
 
       /* --- VIDEO --- */
       .trailer-section { background: var(--wood-brown); padding: 80px 10%; text-align: center; }
@@ -179,34 +191,38 @@
    <h2 class="ref-heading">Technical Pipeline</h2>
    
    <div class="info-row">
-      <img src="images/characters.png" class="info-image" alt="3D modeling process">
+      <img src="images/characters.png" class="info-image" alt="Character Design Concept">
       <div class="info-content">
-         <h3>01. Characters</h3>
-         <p>using adobe illustrator, i draw my characters in 2d art to get a better view of the art direction. the game is a lighthearted story driven so a soft and colourful characters design is needed to gain more interest towards younger audiance while mature enough to attract older generation.</p>
+         <div class="tool-label">Adobe Illustrator & Figma</div>
+         <h3>01. Visual Concepts</h3>
+         <p>I begin by using <b>Adobe Illustrator</b> to craft my characters in 2D to establish a clear art direction. <b>Figma</b> is used to map out UI flows. The game features a lighthearted, story-driven tone, so I focused on soft and colorful designs to attract younger audiences while remaining polished enough for mature players.</p>
       </div>
    </div>
 
    <div class="info-row">
       <img src="images/unity_ss.png" class="info-image" alt="Unity engine interface">
       <div class="info-content">
-         <h3>02. Unity Engine Development</h3>
-         <p>Developed within the Unity Universal Render Pipeline (URP). Features include custom HLSL shaders for environmental effects and a modular C# event system for gameplay triggers.</p>
+         <div class="tool-label">Unity Engine</div>
+         <h3>02. Technical Development</h3>
+         <p>Developed within the <b>Unity Universal Render Pipeline (URP)</b>. This involves setting up the environmental lighting, custom HLSL shaders for water or wind effects, and integrating all assets into a cohesive, interactive world.</p>
       </div>
    </div>
 
    <div class="info-row">
       <img src="images/3d_sculpt.png" class="info-image" alt="3D modeling process">
       <div class="info-content">
-         <h3>03. Stylized 3D Modeling</h3>
-         <p>Comprehensive environmental 3D asset creation using Blender. Focus on low-poly optimization while maintaining high visual appeal for stylized world-building.</p>
+         <div class="tool-label">Blender 3D</div>
+         <h3>03. Stylized 3D Creation</h3>
+         <p>Comprehensive character and environmental 3D asset creation using <b>Blender</b>. I focus on stylized modeling and low-poly optimization, ensuring the world feels hand-crafted while maintaining high performance across all platforms.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/unity_ss.png" class="info-image" alt="Unity engine interface">
+      <img src="images/vsc_ss.png" class="info-image" alt="Visual Studio Code Scripting">
       <div class="info-content">
-         <h3>04. Visual Studio Code</h3>
-         <p>Programming logic utilizing C#. Clean, documented code structure designed for modularity and scalability within the Unity environment.</p>
+         <div class="tool-label">Visual Studio Code (VSC)</div>
+         <h3>04. C# Modular Logic</h3>
+         <p>Programming logic is written in <b>C#</b> using <b>Visual Studio Code</b>. I utilize a modular event system for gameplay triggers, ensuring the code structure is clean, documented, and easily scalable for future story expansions.</p>
       </div>
    </div>
 </section>
@@ -277,4 +293,3 @@
 
 </body>
 </html>
-
