@@ -39,7 +39,7 @@
         body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
         body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
 
-        /* --- HERO SECTION & PARTICLES --- */
+        /* --- HERO SECTION & FIRE PARTICLES --- */
         .hero {
             position: relative; height: 100vh;
             background: url('images/flaimeposter.png') center/cover no-repeat;
@@ -52,48 +52,54 @@
             background: rgba(0, 0, 0, 0.55); z-index: 1;
         }
 
-        /* Particle Container */
         .fire-particles {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2; /* Between background and logo */
+            z-index: 2;
             pointer-events: none;
         }
         .particle {
-            position: absolute; bottom: -10px;
+            position: absolute; bottom: -20px;
             background: var(--brand-orange);
             border-radius: 50%; opacity: 0;
-            filter: blur(1px);
+            filter: blur(2px);
             animation: rise linear infinite;
         }
         @keyframes rise {
             0% { transform: translateY(0) scale(1); opacity: 0; }
             20% { opacity: 0.8; }
-            100% { transform: translateY(-110vh) scale(0.2); opacity: 0; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-110vh) scale(0.3); opacity: 0; }
         }
 
         .hero-logo {
             position: relative; z-index: 3; width: 85%; max-width: 650px;
-            filter: drop-shadow(0 0 20px rgba(255, 94, 58, 0.5));
-            margin-bottom: 20px; transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 25px rgba(255, 94, 58, 0.6));
+            margin-bottom: 20px;
         }
         .hero p { 
             position: relative; z-index: 3; font-family: 'Bebas Neue'; font-size: 1.8rem; 
             text-transform: uppercase; color: var(--caution-yellow); 
             letter-spacing: 4px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
         }
-        .hero-nav { position: relative; z-index: 3; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
 
         /* --- NAVIGATION --- */
         .nav-top { position: fixed; top: 25px; left: 25px; z-index: 100; }
         .btn-nav {
             background: var(--fire-red); color: #fff; padding: 12px 24px;
             text-decoration: none; font-family: 'Bebas Neue'; letter-spacing: 1px;
-            border: 2px solid #fff; transition: 0.3s;
-            display: inline-flex; align-items: center; gap: 10px;
+            border: 2px solid #fff; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
         }
         .btn-nav:hover { background: var(--smoke-dark); color: var(--caution-yellow); border-color: var(--caution-yellow); }
 
-        /* --- OTHER UI ELEMENTS --- */
+        .hero-nav { position: relative; z-index: 3; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+        .btn-hero {
+            background: rgba(0,0,0,0.5); color: white; padding: 15px 35px;
+            text-decoration: none; font-family: 'Bebas Neue'; font-size: 1.4rem; border: 2px solid white;
+            transition: 0.3s; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(5px);
+        }
+        .btn-hero:hover { background: white; color: var(--brand-orange); }
+
+        /* --- BACK TO TOP --- */
         #backToTop {
             position: fixed; bottom: 30px; right: 30px;
             background: var(--brand-orange); color: white; width: 60px; height: 60px;
@@ -103,35 +109,51 @@
         }
         #backToTop.show { opacity: 1; visibility: visible; }
 
-        .btn-hero {
-            background: rgba(0,0,0,0.5); color: white; padding: 15px 35px;
-            text-decoration: none; font-family: 'Bebas Neue';
-            font-size: 1.4rem; border: 2px solid white;
-            transition: 0.3s; display: flex; align-items: center; gap: 10px;
-            backdrop-filter: blur(5px);
+        /* --- TECH STACK BAR (FIXED) --- */
+        .tech-bar {
+            background: #000; color: var(--caution-yellow);
+            padding: 25px; display: flex; justify-content: center; gap: 50px;
+            font-family: 'Bebas Neue', cursive; font-size: 1.5rem;
+            border-top: 4px solid var(--fire-red); border-bottom: 2px solid #333;
+            letter-spacing: 2px; flex-wrap: wrap;
         }
-        .btn-hero:hover { background: white; color: var(--brand-orange); }
+        .tech-item { display: flex; align-items: center; gap: 12px; transition: 0.3s; }
+        .tech-item i { color: var(--brand-orange); font-size: 1.8rem; }
+        .tech-item:hover { color: #fff; transform: translateY(-2px); }
 
-        /* --- PIPELINE & CONTENT --- */
+        /* --- CONTENT SECTIONS --- */
         section { padding: 80px 10%; }
         .ref-heading { font-family: 'Bebas Neue'; color: white; font-size: 4rem; text-align: center; margin-bottom: 50px; }
-        .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
-        .info-row:nth-child(even) { flex-direction: row-reverse; }
-        .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(40%); transition: 0.5s; }
-        .info-row:hover .info-image { filter: grayscale(0%); }
-        .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
-        .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--brand-orange); margin-bottom: 15px; }
-        .tool-label { color: var(--caution-yellow); text-transform: uppercase; font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
-
+        
         .overview-card {
             background: var(--asphalt); margin: -50px auto 40px; max-width: 1000px;
             padding: 60px; border-left: 10px solid var(--brand-orange);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative;
         }
         .overview-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes); }
+        .overview-card p { font-size: 1.4rem; line-height: 1.6; color: #bdc3c7; }
 
-        .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .ss-card { border: 2px solid #333; transition: 0.4s; overflow: hidden;}
+        .info-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
+        .info-row:nth-child(even) { flex-direction: row-reverse; }
+        .info-image { flex: 1; width: 50%; object-fit: cover; min-height: 400px; filter: grayscale(40%); transition: 0.5s; }
+        .info-row:hover .info-image { filter: grayscale(0%); }
+        .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
+        .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--brand-orange); margin-bottom: 15px; }
+        .info-content p { font-size: 1.2rem; line-height: 1.5; color: #ccc; }
+
+        /* --- TRAILER SECTION --- */
+        .trailer-section { background: #111; padding: 80px 10%; text-align: center; }
+        .video-wrapper {
+            max-width: 1000px; margin: 0 auto; background: #000; padding: 12px; 
+            border: 5px solid var(--fire-red); border-radius: 15px;
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.4);
+        }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* --- GALLERY --- */
+        .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
+        .ss-card { border: 2px solid #333; overflow: hidden; transition: 0.4s; aspect-ratio: 16/9; }
         .ss-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: 0.5s; }
         .ss-card:hover img { transform: scale(1.1); }
 
@@ -154,72 +176,58 @@
 </nav>
 
 <section class="hero">
-   <div class="fire-particles" id="particleContainer"></div>
+   <div class="fire-particles" id="fireParticles"></div>
    <img src="images/flaimelogo.png" alt="FLAIMEVR" class="hero-logo">
    <p>Advanced Firefighting Simulation & Training</p>
    <div class="hero-nav">
       <a href="#about" class="btn-hero"><i class="fas fa-bullhorn"></i> MISSION</a>
       <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> PIPELINE</a>
-      <a href="#trailer" class="btn-hero"><i class="fas fa-eye"></i> TEASER</a>
+      <a href="#trailer" class="btn-hero"><i class="fas fa-play"></i> TRAILER</a>
       <a href="#gallery" class="btn-hero"><i class="fas fa-layer-group"></i> GALLERY</a>
    </div>
 </section>
 
 <div class="tech-bar">
-    <div class="tech-item"><i class="fab fa-unity"></i> Unity URP</div>
-    <div class="tech-item"><i class="fas fa-vr-cardboard"></i> Meta Quest 3</div>
-    <div class="tech-item"><i class="fas fa-code"></i> C# Systems</div>
+    <div class="tech-item"><i class="fab fa-unity"></i><span>UNITY URP</span></div>
+    <div class="tech-item"><i class="fas fa-vr-cardboard"></i><span>META QUEST 3</span></div>
+    <div class="tech-item"><i class="fas fa-code"></i><span>C# MODULAR SYSTEMS</span></div>
+    <div class="tech-item"><i class="fas fa-fire"></i><span>REAL-TIME SIMULATION</span></div>
 </div>
 
 <section id="about" class="reveal">
     <div class="overview-card">
         <h2 style="font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px;">Tactical Simulation</h2>
-        <p style="font-size: 1.3rem; line-height: 1.6; color: #bdc3c7;">
-            <b>FLAIMEVR</b> is an immersive virtual reality simulation integrating hands-on firefighting operations with real-time strategic decision-making. 
+        <p>
+            <b>FLAIMEVR</b> is an immersive virtual reality simulation designed to bridge the gap between classroom theory and high-risk field operations. By integrating hands-on firefighting mechanics with real-time strategic decision-making, it provides a safe yet intense training environment for the next generation of responders.
         </p>
     </div>
 </section>
 
 <section id="technical" class="reveal">
    <h2 class="ref-heading">Development Pipeline</h2>
+   
    <div class="info-row">
       <img src="images/vr_interaction.png" class="info-image" alt="VR Mechanics">
       <div class="info-content">
-         <div class="tool-label">C# / XR Toolkit</div>
          <h3>01. Physics Interaction</h3>
          <p>Developed custom grab mechanics for heavy equipment utilizing haptic feedback profiles to simulate realistic weight and tension.</p>
       </div>
    </div>
+
    <div class="info-row">
-      <img src="images/ai_logic.png" class="info-image" alt="AI Decision Support">
+      <img src="images/ai_logic.png" class="info-image" alt="AI Logic">
       <div class="info-content">
-         <div class="tool-label">Unity AI / Behavior Trees</div>
          <h3>02. AI-Driven Strategy</h3>
          <p>Integrated an AI environmental system that provides real-time updates on fire propagation and weather behavior for the RTS layer.</p>
       </div>
    </div>
-   <div class="info-row">
-      <img src="images/environment_design.png" class="info-image" alt="Environment Design">
-      <div class="info-content">
-         <div class="tool-label">Substance / PBR Workflow</div>
-         <h3>03. Visual Optimization</h3>
-         <p>PBR workflows ensure soot, water, and metal react accurately to dynamic heat light while remaining optimized for mobile VR chipsets.</p>
-      </div>
-   </div>
-   <div class="info-row">
-      <img src="images/scenario_manager.png" class="info-image" alt="Scenario Logic">
-      <div class="info-content">
-         <div class="tool-label">ScriptableObjects / Events</div>
-         <h3>04. Event Systems</h3>
-         <p>Architected a modular event system for procedural hazards like chemical explosions or wind shifts, ensuring dynamic mission variety.</p>
-      </div>
-   </div>
 </section>
 
-<section id="trailer" style="background: #111; padding: 80px 10%;">
-   <div style="max-width: 1100px; margin: 0 auto; background: #000; padding: 15px; border: 4px solid var(--brand-orange); border-radius: 20px;">
-       <div style="position: relative; padding-bottom: 56.25%; height: 0;">
-          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgUD" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+<section id="trailer" class="trailer-section">
+   <h2 class="ref-heading">Official Teaser</h2>
+   <div class="video-wrapper">
+       <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
        </div>
    </div>
 </section>
@@ -227,47 +235,41 @@
 <section id="gallery" class="reveal">
    <h2 class="ref-heading">System Gallery</h2>
    <div class="screenshot-grid">
-      <div class="ss-card"><img src="images/vr1.png" alt="VR Scene 1"></div>
-      <div class="ss-card"><img src="images/vr2.png" alt="VR Scene 2"></div>
-      <div class="ss-card"><img src="images/vr3.png" alt="VR Scene 3"></div>
-      <div class="ss-card"><img src="images/vr4.png" alt="VR Scene 4"></div>
-      <div class="ss-card"><img src="images/vr5.png" alt="VR Scene 5"></div>
-      <div class="ss-card"><img src="images/vr6.png" alt="VR Scene 6"></div>
+      <div class="ss-card"><img src="images/vr1.png"></div>
+      <div class="ss-card"><img src="images/vr2.png"></div>
+      <div class="ss-card"><img src="images/vr3.png"></div>
+      <div class="ss-card"><img src="images/vr4.png"></div>
+      <div class="ss-card"><img src="images/vr5.png"></div>
+      <div class="ss-card"><img src="images/vr6.png"></div>
    </div>
 </section>
 
 <footer>
    <div class="hazard-line"></div>
-   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | Developed by Nabil</p>
+   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | © 2026 Nabil Studio</p>
 </footer>
 
 <script>
-   // --- PARTICLE GENERATOR ---
-   function createParticles() {
-       const container = document.getElementById('particleContainer');
-       const count = 40;
-       for (let i = 0; i < count; i++) {
+   function initFire() {
+       const container = document.getElementById('fireParticles');
+       for (let i = 0; i < 50; i++) {
            const particle = document.createElement('div');
            particle.className = 'particle';
-           
-           const size = Math.random() * 6 + 2 + 'px';
+           const size = Math.random() * 7 + 2 + 'px';
            particle.style.width = size;
            particle.style.height = size;
-           
            particle.style.left = Math.random() * 100 + '%';
            particle.style.animationDuration = Math.random() * 3 + 2 + 's';
            particle.style.animationDelay = Math.random() * 5 + 's';
-           
            container.appendChild(particle);
        }
    }
 
    window.addEventListener('DOMContentLoaded', () => {
-      createParticles();
+      initFire();
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
 
-      const transitionLinks = document.querySelectorAll('.transition-link');
-      transitionLinks.forEach(link => {
+      document.querySelectorAll('.transition-link').forEach(link => {
           link.addEventListener('click', function(e) {
               e.preventDefault();
               const target = this.getAttribute('href');
@@ -282,17 +284,13 @@
 
       const btt = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
-         if (window.pageYOffset > 300) { btt.classList.add('show'); } 
-         else { btt.classList.remove('show'); }
+         window.pageYOffset > 300 ? btt.classList.add('show') : btt.classList.remove('show');
       });
       btt.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
       function reveal() {
-          const reveals = document.querySelectorAll(".reveal");
-          reveals.forEach(el => {
-             const windowHeight = window.innerHeight;
-             const elementTop = el.getBoundingClientRect().top;
-             if (elementTop < windowHeight - 100) { el.classList.add("active"); }
+          document.querySelectorAll(".reveal").forEach(el => {
+             if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active");
           });
       }
       window.addEventListener("scroll", reveal);
