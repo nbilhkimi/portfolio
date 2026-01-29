@@ -31,6 +31,7 @@ $user_id = $_SESSION['user_id'] ?? '';
           min-height: 100vh;
       }
 
+      /* RESTORED ANIMATED CANVAS */
       #canvas-bg {
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
@@ -38,7 +39,55 @@ $user_id = $_SESSION['user_id'] ?? '';
           background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
       }
 
-      /* --- BUTTONS: FIXED FONTS --- */
+      .transition-swipe {
+          position: fixed;
+          top: 0; left: 100%;
+          width: 100%; height: 100%;
+          background: var(--primary-orange);
+          z-index: 9999;
+          transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+          pointer-events: none;
+      }
+
+      /* --- HEADER & BIO --- */
+      .header-wrapper {
+          padding: 100px 8% 60px 8%;
+          position: relative;
+          animation: fadeInUp 1s ease forwards;
+      }
+
+      .header-container {
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr; 
+          gap: 40px;
+          max-width: 1400px;
+          margin: 0 auto;
+          align-items: end;
+      }
+
+      .title-side h1 {
+          font-size: clamp(3rem, 8vw, 6.5rem);
+          font-weight: 900;
+          line-height: 0.9;
+          text-transform: uppercase;
+          letter-spacing: -2px;
+          font-family: 'Syncopate', sans-serif;
+          background: linear-gradient(to bottom, #fff 100%, #444 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
+
+      /* RESTORED BIO STYLING */
+      .description-side p {
+          font-size: 1rem; 
+          color: #aaa; 
+          border-left: 2px solid var(--primary-orange); 
+          padding: 20px 25px; 
+          max-width: 450px;
+          line-height: 1.6;
+      }
+
+      /* --- BUTTONS --- */
       .btn-container { display: flex; gap: 15px; margin-top: 25px; }
 
       .resume-btn, .contact-btn, #submitText {
@@ -47,7 +96,7 @@ $user_id = $_SESSION['user_id'] ?? '';
           border: 1px solid var(--primary-orange);
           color: var(--primary-orange);
           text-decoration: none;
-          font-family: 'Syncopate', sans-serif; /* Explicit Font */
+          font-family: 'Syncopate', sans-serif;
           font-size: 0.7rem;
           font-weight: 700;
           letter-spacing: 2px;
@@ -58,28 +107,20 @@ $user_id = $_SESSION['user_id'] ?? '';
       }
 
       .contact-btn { background: var(--primary-orange); color: #000; }
-      .resume-btn:hover { background: rgba(255, 94, 58, 0.1); box-shadow: 0 0 15px var(--neon-glow); }
-      .contact-btn:hover { box-shadow: 0 0 20px var(--neon-glow); filter: brightness(1.1); }
+      .resume-btn:hover { background: rgba(255, 94, 58, 0.1); box-shadow: 0 0 15px var(--neon-glow); transform: translateY(-3px); }
+      .contact-btn:hover { box-shadow: 0 0 20px var(--neon-glow); filter: brightness(1.1); transform: translateY(-3px); }
 
-      /* --- SERVICE CARDS: FIXED PURPLE TEXT --- */
+      /* --- SERVICE CARDS (PURPLE TEXT FIXED) --- */
       .services-grid {
           display: flex; width: 100%; height: 60vh; padding: 20px 8%; gap: 15px;
+          animation: fadeInUp 1s ease forwards; animation-delay: 0.3s; opacity: 0;
       }
 
-      .service-card, 
-      .service-card:visited { /* This specifically kills the purple */
-          position: relative; 
-          flex: 1; 
-          overflow: hidden; 
-          display: flex; 
-          align-items: flex-end;
-          padding: 40px; 
-          text-decoration: none; 
-          transition: var(--transition);
-          border-radius: 4px; 
-          border: 1px solid rgba(255,255,255,0.05); 
-          background: var(--card-bg);
-          color: #ffffff !important; 
+      .service-card, .service-card:visited {
+          position: relative; flex: 1; overflow: hidden; display: flex; align-items: flex-end;
+          padding: 40px; text-decoration: none; transition: var(--transition);
+          border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); background: var(--card-bg);
+          color: #ffffff !important;
       }
 
       .service-card::before {
@@ -88,19 +129,18 @@ $user_id = $_SESSION['user_id'] ?? '';
           z-index: 1; opacity: 0.4; filter: grayscale(1);
       }
 
-      /* Image assignments */
       .card-1::before { background-image: url('images/dp.jpg'); }
       .card-2::before { background-image: url('images/meta.png'); }
       .card-3::before { background-image: url('images/book3.png'); }
       .card-4::before { background-image: url('images/gallery.jpg'); }
 
-      .service-card:hover { flex: 2; border-color: var(--primary-orange); color: #ffffff !important; }
+      .service-card:hover { flex: 2; border-color: var(--primary-orange); }
       .service-card:hover::before { opacity: 0.8; filter: grayscale(0); transform: scale(1.05); }
 
       .card-content { position: relative; z-index: 4; }
       .card-content h3 { font-family: 'Syncopate', sans-serif; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px; }
 
-      /* --- MODAL & HEADER --- */
+      /* --- MODAL --- */
       .modal-overlay {
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
@@ -117,15 +157,19 @@ $user_id = $_SESSION['user_id'] ?? '';
           border: 1px solid var(--primary-orange); position: relative;
       }
 
-      .header-wrapper { padding: 100px 8% 60px 8%; animation: fadeInUp 1s ease forwards; }
-      .title-side h1 { font-family: 'Syncopate', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.9; text-transform: uppercase; }
-
       @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+      @media (max-width: 900px) {
+          .header-container { grid-template-columns: 1fr; }
+          .services-grid { flex-direction: column; height: auto; }
+          .service-card { height: 200px; flex: none; }
+      }
    </style>
 </head>
 <body>
 
 <canvas id="canvas-bg"></canvas>
+<div class="transition-swipe"></div>
 
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {showSuccess();}"></iframe>
 
@@ -145,25 +189,32 @@ $user_id = $_SESSION['user_id'] ?? '';
 </div>
 
 <div class="header-wrapper">
-   <div class="title-side">
-      <span style="color:var(--primary-orange); font-family:'Syncopate'; font-size:0.7rem; letter-spacing:5px;">NAB-DEV // 2024</span>
-      <h1>Nabil<br>NurHakimi</h1>
-      <div class="btn-container">
-          <a href="assets/Resume.pdf" download class="resume-btn">Resume</a>
-          <button class="contact-btn" onclick="document.getElementById('contactModal').style.display='flex'">Contact</button>
+   <section class="header-container">
+      <div class="title-side">
+         <span style="color:var(--primary-orange); font-family:'Syncopate'; font-size:0.7rem; letter-spacing:5px; margin-bottom:10px; display:block;">NAB-DEV // 2024</span>
+         <h1>Nabil<br>NurHakimi</h1>
+         <div class="btn-container">
+             <a href="assets/Resume.pdf" download class="resume-btn">Resume</a>
+             <button class="contact-btn" onclick="document.getElementById('contactModal').style.display='flex'">Contact</button>
+         </div>
       </div>
-   </div>
+      <div class="description-side">
+         <p>Ambitious Unity Developer specializing in immersive VR/AR systems. Bridging the gap between creative design and technical execution to build intuitive, high-performance applications.</p>
+      </div>
+   </section>
 </div>
 
 <section class="services-grid">
-   <a href="profile.html" class="service-card card-1"><div class="card-content"><h3>Profile</h3></div></a>
-   <a href="project.html" class="service-card card-2"><div class="card-content"><h3>Projects</h3></div></a>
-   <a href="award.html" class="service-card card-3"><div class="card-content"><h3>Awards</h3></div></a>
-   <a href="gallery.html" class="service-card card-4"><div class="card-content"><h3>Gallery</h3></div></a>
+   <a href="profile.html" class="service-card card-1 transition-link"><div class="card-content"><h3>Profile</h3></div></a>
+   <a href="project.html" class="service-card card-2 transition-link"><div class="card-content"><h3>Projects</h3></div></a>
+   <a href="award.html" class="service-card card-3 transition-link"><div class="card-content"><h3>Awards</h3></div></a>
+   <a href="gallery.html" class="service-card card-4 transition-link"><div class="card-content"><h3>Gallery</h3></div></a>
 </section>
 
 <script>
    let submitted = false;
+
+   // SUCCESS FEEDBACK
    function showSuccess() {
       const btn = document.getElementById('submitText');
       btn.innerText = "SUCCESS";
@@ -179,20 +230,69 @@ $user_id = $_SESSION['user_id'] ?? '';
       }, 2000);
    }
 
-   // Basic Canvas Logic
+   // RESTORED ADVANCED ANIMATED CANVAS
    const canvas = document.getElementById('canvas-bg');
    const ctx = canvas.getContext('2d');
    let particles = [];
-   function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-   class P {
-      constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.vx=Math.random()*0.4-0.2; this.vy=Math.random()*0.4-0.2; }
-      draw() { ctx.fillStyle='rgba(255,94,58,0.3)'; ctx.beginPath(); ctx.arc(this.x,this.y,1,0,Math.PI*2); ctx.fill(); }
-      update() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1; }
+
+   function initCanvas() { 
+       canvas.width = window.innerWidth; 
+       canvas.height = window.innerHeight; 
    }
-   for(let i=0;i<70;i++) particles.push(new P());
-   function anim() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(anim); }
-   init(); anim();
-   window.onresize = init;
+
+   class Particle {
+      constructor() {
+         this.x = Math.random() * canvas.width;
+         this.y = Math.random() * canvas.height;
+         this.size = Math.random() * 2 + 1;
+         this.speedX = Math.random() * 0.4 - 0.2;
+         this.speedY = Math.random() * 0.4 - 0.2;
+      }
+      update() {
+         this.x += this.speedX; this.y += this.speedY;
+         if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+         if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+      }
+      draw() {
+         ctx.fillStyle = 'rgba(255, 94, 58, 0.4)';
+         ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+      }
+   }
+
+   function createParticles() {
+      particles = [];
+      for (let i = 0; i < 70; i++) { particles.push(new Particle()); }
+   }
+
+   function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+         p.update(); p.draw();
+         for (let j = index; j < particles.length; j++) {
+            const dx = p.x - particles[j].x; const dy = p.y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 120) {
+               ctx.strokeStyle = `rgba(255, 94, 58, ${0.3 - distance/400})`;
+               ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y);
+               ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+            }
+         }
+      });
+      requestAnimationFrame(animate);
+   }
+
+   window.addEventListener('resize', () => { initCanvas(); createParticles(); });
+   initCanvas(); createParticles(); animate();
+
+   // TRANSITIONS
+   document.querySelectorAll('.transition-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+         e.preventDefault();
+         const target = this.getAttribute('href');
+         document.querySelector('.transition-swipe').style.left = '0';
+         setTimeout(() => { window.location.href = target; }, 500);
+      });
+   });
 </script>
 
 </body>
