@@ -17,7 +17,7 @@ $user_id = $_SESSION['user_id'] ?? '';
           --primary-orange: #ff5e3a; 
           --neon-glow: rgba(255, 94, 58, 0.6);
           --bg-dark: #0a0a0a;
-          --card-bg: rgba(20, 20, 20, 0.7);
+          --card-bg: rgba(20, 20, 20, 0.85);
           --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       }
 
@@ -31,6 +31,7 @@ $user_id = $_SESSION['user_id'] ?? '';
           min-height: 100vh;
       }
 
+      /* --- ANIMATIONS --- */
       @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
@@ -114,11 +115,11 @@ $user_id = $_SESSION['user_id'] ?? '';
           transform: translateY(-2px);
       }
 
-      /* --- MODAL --- */
+      /* --- MODAL DIALOGUE --- */
       .modal-overlay {
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
-          background: rgba(0,0,0,0.9);
+          background: rgba(0,0,0,0.95);
           display: none;
           justify-content: center;
           align-items: center;
@@ -133,6 +134,15 @@ $user_id = $_SESSION['user_id'] ?? '';
           max-width: 450px;
           border: 1px solid var(--primary-orange);
           position: relative;
+          animation: fadeInUp 0.4s ease;
+      }
+
+      .modal-box h2 { 
+          font-family: 'Syncopate', sans-serif; 
+          color: var(--primary-orange); 
+          margin-bottom: 20px; 
+          font-size: 0.9rem; 
+          letter-spacing: 2px; 
       }
 
       .modal-box input, .modal-box textarea {
@@ -142,10 +152,13 @@ $user_id = $_SESSION['user_id'] ?? '';
           background: #111;
           border: 1px solid #333;
           color: #fff;
+          font-family: 'Poppins', sans-serif;
           outline: none;
       }
 
-      .close-modal { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #777; }
+      .modal-box input:focus, .modal-box textarea:focus { border-color: var(--primary-orange); }
+
+      .close-modal { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #777; font-size: 1.5rem; }
 
       /* --- DESCRIPTION --- */
       .description-side p {
@@ -171,6 +184,7 @@ $user_id = $_SESSION['user_id'] ?? '';
           z-index: 1; opacity: 0.6; filter: grayscale(1);
       }
 
+      /* Update these image paths to your actual files */
       .card-1::before { background-image: url('images/dp.jpg'); }
       .card-2::before { background-image: url('images/meta.png'); }
       .card-3::before { background-image: url('images/book3.png'); }
@@ -180,7 +194,7 @@ $user_id = $_SESSION['user_id'] ?? '';
       .service-card:hover::before { opacity: 1; filter: grayscale(0); }
 
       .card-content { position: relative; z-index: 4; }
-      .card-content h3 { font-family: 'Syncopate', sans-serif; text-transform: uppercase; }
+      .card-content h3 { font-family: 'Syncopate', sans-serif; text-transform: uppercase; font-size: 1.5rem; }
 
       @media (max-width: 900px) {
           .header-container { grid-template-columns: 1fr; }
@@ -200,17 +214,18 @@ $user_id = $_SESSION['user_id'] ?? '';
 <div class="modal-overlay" id="contactModal">
     <div class="modal-box">
         <span class="close-modal" id="closeModal">×</span>
-        <h2 style="font-family:'Syncopate'; color: var(--primary-orange); margin-bottom: 20px;">CONTACT</h2>
+        <h2>ESTABLISH CONNECTION</h2>
         
         <form action="https://docs.google.com/forms/d/e/1FAIpQLSdnp1brNHNwv1ruz1cHDXvFn6e31TFCN1OfbE9xOSplXuRLhw/formResponse" 
               method="POST" 
               target="hidden_iframe" 
               onsubmit="submitted=true;">
             
-            <input type="email" name="entry.1740924976" placeholder="EMAIL" required>
-            <textarea name="entry.1691456184" rows="5" placeholder="MESSAGE" required style="width: 100%; background:#111; color:#fff; border:1px solid #333; padding:12px;"></textarea>
+            <input type="email" name="entry.518894902" placeholder="YOUR EMAIL" required>
             
-            <button type="submit" id="submitText" style="width:100%; padding:15px; background:var(--primary-orange); border:none; font-family:'Syncopate'; cursor:pointer; font-weight:bold;">SEND TRANSMISSION</button>
+            <textarea name="entry.2140952399" rows="5" placeholder="WHAT DO YOU WANT TO ASK?" required></textarea>
+            
+            <button type="submit" id="submitText" style="width:100%; padding:15px; background:var(--primary-orange); border:none; font-family:'Syncopate'; cursor:pointer; font-weight:bold; color:#000;">SEND TRANSMISSION</button>
         </form>
     </div>
 </div>
@@ -223,7 +238,7 @@ $user_id = $_SESSION['user_id'] ?? '';
             <h1>Nabil<br>NurHakimi</h1>
             <div class="btn-container">
                 <a href="assets/Resume.pdf" download class="resume-btn">Resume</a>
-                <button class="contact-btn" id="openModal">Contact</button>
+                <button class="contact-btn" id="openModal">Contact Me</button>
             </div>
          </div>
       </div>
@@ -254,9 +269,12 @@ $user_id = $_SESSION['user_id'] ?? '';
    const openBtn = document.getElementById('openModal');
    const closeBtn = document.getElementById('closeModal');
 
+   // OPEN/CLOSE MODAL
    openBtn.onclick = () => modal.style.display = 'flex';
    closeBtn.onclick = () => modal.style.display = 'none';
+   window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; }
 
+   // SUCCESS FEEDBACK
    function showSuccess() {
       const btn = document.getElementById('submitText');
       btn.innerText = "TRANSMISSION RECEIVED";
@@ -265,6 +283,7 @@ $user_id = $_SESSION['user_id'] ?? '';
          modal.style.display = 'none';
          btn.innerText = "SEND TRANSMISSION";
          btn.style.background = "var(--primary-orange)";
+         document.querySelector('form').reset();
          submitted = false;
       }, 2500);
    }
@@ -279,8 +298,8 @@ $user_id = $_SESSION['user_id'] ?? '';
          this.x = Math.random() * canvas.width;
          this.y = Math.random() * canvas.height;
          this.size = Math.random() * 2 + 1;
-         this.speedX = Math.random() * 0.6 - 0.3;
-         this.speedY = Math.random() * 0.6 - 0.3;
+         this.speedX = Math.random() * 0.4 - 0.2;
+         this.speedY = Math.random() * 0.4 - 0.2;
       }
       update() {
          this.x += this.speedX; this.y += this.speedY;
@@ -294,7 +313,7 @@ $user_id = $_SESSION['user_id'] ?? '';
    }
    function createParticles() {
       particles = [];
-      for (let i = 0; i < 70; i++) { particles.push(new Particle()); }
+      for (let i = 0; i < 60; i++) { particles.push(new Particle()); }
    }
    function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -315,7 +334,7 @@ $user_id = $_SESSION['user_id'] ?? '';
    window.addEventListener('resize', () => { initCanvas(); createParticles(); });
    initCanvas(); createParticles(); animate();
 
-   // TRANSITIONS
+   // PAGE TRANSITIONS
    document.querySelectorAll('.transition-link').forEach(link => {
       link.addEventListener('click', function(e) {
          e.preventDefault();
