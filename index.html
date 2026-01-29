@@ -44,6 +44,16 @@ $user_id = $_SESSION['user_id'] ?? '';
           background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
       }
 
+      .transition-swipe {
+          position: fixed;
+          top: 0; left: 100%;
+          width: 100%; height: 100%;
+          background: var(--primary-orange);
+          z-index: 9999;
+          transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+          pointer-events: none;
+      }
+
       /* --- HEADER SECTION --- */
       .header-wrapper {
           padding: 100px 8% 60px 8%;
@@ -53,19 +63,18 @@ $user_id = $_SESSION['user_id'] ?? '';
 
       .header-container {
           display: grid;
-          grid-template-columns: 1.3fr 0.7fr; 
+          grid-template-columns: 1.2fr 0.8fr; 
           gap: 40px;
           max-width: 1400px;
           margin: 0 auto;
-          align-items: end; /* Align items to the bottom of the grid */
+          align-items: end;
       }
 
-      /* FLEX CONTAINER FOR NAME AND BUTTON */
       .title-group {
           display: flex;
           align-items: baseline;
           flex-wrap: wrap;
-          gap: 30px;
+          gap: 20px;
       }
 
       .title-side .sub-title {
@@ -92,40 +101,75 @@ $user_id = $_SESSION['user_id'] ?? '';
           filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
       }
 
-      /* --- RESUME BUTTON NEXT TO NAME --- */
-      .resume-btn {
+      /* --- NEW BUTTONS --- */
+      .btn-container { display: flex; gap: 12px; margin-bottom: 10px; }
+
+      .resume-btn, .contact-btn {
           display: inline-flex;
-          align-items: center;
-          padding: 12px 24px;
+          padding: 10px 18px;
           border: 1px solid var(--primary-orange);
           color: var(--primary-orange);
           text-decoration: none;
           font-family: 'Syncopate', sans-serif;
-          font-size: 0.65rem;
+          font-size: 0.6rem;
           font-weight: 700;
-          letter-spacing: 2px;
+          letter-spacing: 1px;
           text-transform: uppercase;
           transition: var(--transition);
-          background: transparent;
           cursor: pointer;
-          border-radius: 2px;
-          margin-bottom: 10px; /* Aligns visually with the bottom of the text */
+          background: transparent;
       }
 
-      .resume-btn:hover {
-          background: var(--primary-orange);
-          box-shadow: 0 0 20px var(--neon-glow);
-          color: #000;
+      .contact-btn { background: var(--primary-orange); color: #000; }
+
+      .resume-btn:hover, .contact-btn:hover {
+          box-shadow: 0 0 15px var(--neon-glow);
           transform: translateY(-2px);
+          filter: brightness(1.1);
       }
 
+      /* --- CONTACT MODAL --- */
+      .modal-overlay {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.9);
+          display: none;
+          justify-content: center;
+          align-items: center;
+          z-index: 10000;
+          backdrop-filter: blur(10px);
+      }
+
+      .modal-box {
+          background: var(--card-bg);
+          padding: 40px;
+          width: 90%;
+          max-width: 450px;
+          border: 1px solid var(--primary-orange);
+          position: relative;
+          animation: fadeInUp 0.4s ease;
+      }
+
+      .modal-box input, .modal-box textarea {
+          width: 100%;
+          padding: 12px;
+          margin-bottom: 15px;
+          background: #111;
+          border: 1px solid #333;
+          color: #fff;
+          outline: none;
+      }
+
+      .close-modal { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #777; }
+
+      /* --- DESCRIPTION --- */
       .description-side p {
-          font-size: 0.95rem;
+          font-size: 1rem;
           line-height: 1.8;
           color: #aaa;
           border-left: 2px solid var(--primary-orange); 
-          padding: 10px 25px;
-          max-width: 400px;
+          padding: 20px 25px;
+          max-width: 450px;
           backdrop-filter: blur(5px);
           background: rgba(255,255,255,0.02);
       }
@@ -134,7 +178,7 @@ $user_id = $_SESSION['user_id'] ?? '';
       .services-grid {
           display: flex;
           width: 100%;
-          height: 55vh; 
+          height: 60vh; 
           padding: 20px 8%;
           gap: 15px;
           opacity: 0;
@@ -143,28 +187,15 @@ $user_id = $_SESSION['user_id'] ?? '';
       }
 
       .service-card {
-          position: relative;
-          flex: 1;
-          overflow: hidden;
-          display: flex;
-          align-items: flex-end;
-          padding: 40px;
-          text-decoration: none;
-          transition: var(--transition);
-          border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: var(--card-bg);
+          position: relative; flex: 1; overflow: hidden; display: flex; align-items: flex-end;
+          padding: 40px; text-decoration: none; transition: var(--transition);
+          border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--card-bg);
       }
 
       .service-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; width: 100%; height: 100%;
-          background-size: cover;
-          background-position: center;
-          transition: var(--transition);
-          z-index: 1;
-          opacity: 0.4;
+          content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+          background-size: cover; background-position: center; transition: var(--transition);
+          z-index: 1; opacity: 0.6; filter: grayscale(1) brightness(0.6);
       }
 
       .card-1::before { background-image: url('images/dp.jpg'); }
@@ -172,42 +203,18 @@ $user_id = $_SESSION['user_id'] ?? '';
       .card-3::before { background-image: url('images/book3.png'); }
       .card-4::before { background-image: url('images/gallery.jpg'); }
 
-      .service-card:hover {
-          flex: 2;
-          border-color: var(--primary-orange);
-          box-shadow: 0 0 30px var(--neon-glow);
-      }
-
-      .service-card:hover::before { opacity: 0.8; transform: scale(1.05); }
+      .service-card:hover { flex: 2; border-color: var(--primary-orange); box-shadow: 0 0 30px var(--neon-glow); }
+      .service-card:hover::before { opacity: 1; transform: scale(1.05); filter: grayscale(0) brightness(1); }
 
       .card-number {
-          position: absolute;
-          top: 20px; left: 20px;
-          font-size: 3rem;
-          font-weight: 900;
-          opacity: 0.1;
-          font-family: 'Syncopate', sans-serif;
-          color: #fff;
-          z-index: 3;
+          position: absolute; top: 20px; left: 20px; font-size: 4rem; font-weight: 900;
+          opacity: 0.1; font-family: 'Syncopate', sans-serif; color: #fff; z-index: 3;
       }
 
       .card-content { position: relative; z-index: 4; }
       .card-content h3 {
-          color: #fff;
-          font-size: 1.5rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          font-family: 'Syncopate', sans-serif;
-      }
-
-      .transition-swipe {
-          position: fixed;
-          top: 0; left: 100%;
-          width: 100%; height: 100%;
-          background: var(--primary-orange);
-          z-index: 9999;
-          transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-          pointer-events: none;
+          color: #fff; font-size: 1.8rem; font-weight: 700; text-transform: uppercase;
+          font-family: 'Syncopate', sans-serif; line-height: 1.2; text-shadow: 0 0 15px rgba(0,0,0,0.9);
       }
 
       @media (max-width: 900px) {
@@ -223,15 +230,28 @@ $user_id = $_SESSION['user_id'] ?? '';
 <canvas id="canvas-bg"></canvas>
 <div class="transition-swipe"></div>
 
+<div class="modal-overlay" id="contactModal">
+    <div class="modal-box">
+        <span class="close-modal" id="closeModal">×</span>
+        <h2 style="font-family:'Syncopate'; font-size: 1rem; margin-bottom: 20px; color: var(--primary-orange);">NEW TRANSMISSION</h2>
+        <form id="gform">
+            <input type="email" id="email" placeholder="EMAIL" required>
+            <textarea id="message" rows="5" placeholder="MESSAGE" required style="width: 100%; background:#111; color:#fff; border:1px solid #333; padding:12px;"></textarea>
+            <button type="submit" id="submitText" style="width:100%; padding:15px; background:var(--primary-orange); border:none; font-family:'Syncopate'; cursor:pointer;">SEND</button>
+        </form>
+    </div>
+</div>
+
 <div class="header-wrapper">
    <section class="header-container">
       <div class="title-side">
          <span class="sub-title">WELCOME // MY PORTFOLIO</span>
          <div class="title-group">
             <h1>Nabil<br>NurHakimi</h1>
-            <a href="files/resume.pdf" download class="resume-btn">
-               Download Resume
-            </a>
+            <div class="btn-container">
+                <a href="files/resume.pdf" download class="resume-btn">Resume</a>
+                <button class="contact-btn" id="openModal">Contact</button>
+            </div>
          </div>
       </div>
       <div class="description-side">
@@ -263,18 +283,44 @@ $user_id = $_SESSION['user_id'] ?? '';
 </section>
 
 <script>
+   // MODAL & GFORM LOGIC
+   const modal = document.getElementById('contactModal');
+   const openBtn = document.getElementById('openModal');
+   const closeBtn = document.getElementById('closeModal');
+   const form = document.getElementById('gform');
+
+   openBtn.onclick = () => modal.style.display = 'flex';
+   closeBtn.onclick = () => modal.style.display = 'none';
+   window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; }
+
+   form.onsubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitText');
+      btn.innerText = "SENDING...";
+      const formData = new FormData();
+      formData.append("entry.1740924976", document.getElementById('email').value);
+      formData.append("entry.1691456184", document.getElementById('message').value);
+      
+      await fetch("https://docs.google.com/forms/d/e/1FAIpQLSdnp1brNHNwv1ruz1cHDXvFn6e31TFCN1OfbE9xOSplXuRLhw/formResponse", {
+         method: 'POST', mode: 'no-cors', body: formData
+      });
+      
+      btn.innerText = "SENT";
+      setTimeout(() => { modal.style.display = 'none'; form.reset(); btn.innerText = "SEND"; }, 2000);
+   };
+
+   // PARTICLE CANVAS
    const canvas = document.getElementById('canvas-bg');
    const ctx = canvas.getContext('2d');
    let particles = [];
    function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-   
    class Particle {
       constructor() {
          this.x = Math.random() * canvas.width;
          this.y = Math.random() * canvas.height;
          this.size = Math.random() * 2 + 1;
-         this.speedX = Math.random() * 0.5 - 0.25;
-         this.speedY = Math.random() * 0.5 - 0.25;
+         this.speedX = Math.random() * 1 - 0.5;
+         this.speedY = Math.random() * 1 - 0.5;
       }
       update() {
          this.x += this.speedX; this.y += this.speedY;
@@ -282,16 +328,14 @@ $user_id = $_SESSION['user_id'] ?? '';
          if (this.y > canvas.height) this.y = 0; if (this.y < 0) this.y = canvas.height;
       }
       draw() {
-         ctx.fillStyle = 'rgba(255, 94, 58, 0.4)';
+         ctx.fillStyle = 'rgba(255, 94, 58, 0.5)';
          ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
       }
    }
-
    function createParticles() {
       particles = [];
-      for (let i = 0; i < 60; i++) { particles.push(new Particle()); }
+      for (let i = 0; i < 80; i++) { particles.push(new Particle()); }
    }
-
    function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p, index) => {
@@ -300,7 +344,7 @@ $user_id = $_SESSION['user_id'] ?? '';
             const dx = p.x - particles[j].x; const dy = p.y - particles[j].y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < 150) {
-               ctx.strokeStyle = `rgba(255, 94, 58, ${0.4 - distance/375})`;
+               ctx.strokeStyle = `rgba(255, 94, 58, ${1 - distance/150})`;
                ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y);
                ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
             }
@@ -308,16 +352,15 @@ $user_id = $_SESSION['user_id'] ?? '';
       });
       requestAnimationFrame(animate);
    }
-
    window.addEventListener('resize', () => { initCanvas(); createParticles(); });
    initCanvas(); createParticles(); animate();
 
+   // TRANSITIONS
    document.querySelectorAll('.transition-link').forEach(link => {
       link.addEventListener('click', function(e) {
          e.preventDefault();
          const target = this.getAttribute('href');
-         const swipe = document.querySelector('.transition-swipe');
-         swipe.style.left = '0';
+         document.querySelector('.transition-swipe').style.left = '0';
          setTimeout(() => { window.location.href = target; }, 550);
       });
    });
