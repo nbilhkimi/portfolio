@@ -31,7 +31,7 @@ $user_id = $_SESSION['user_id'] ?? '';
           min-height: 100vh;
       }
 
-      /* RESTORED ANIMATED CANVAS */
+      /* CANVAS BACKGROUND */
       #canvas-bg {
           position: fixed;
           top: 0; left: 0; width: 100%; height: 100%;
@@ -39,14 +39,22 @@ $user_id = $_SESSION['user_id'] ?? '';
           background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
       }
 
+      /* TRANSITION OVERLAY - Modified for Entrance/Exit */
       .transition-swipe {
           position: fixed;
-          top: 0; left: 100%;
-          width: 100%; height: 100%;
+          top: 0; 
+          left: -100%; /* Start off-screen to the left */
+          width: 100%; 
+          height: 100%;
           background: var(--primary-orange);
           z-index: 9999;
-          transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+          transition: left 0.6s cubic-bezier(0.77, 0, 0.175, 1);
           pointer-events: none;
+      }
+
+      /* Active state for leaving the page */
+      .transition-swipe.is-active {
+          left: 0;
       }
 
       /* --- HEADER & BIO --- */
@@ -77,7 +85,6 @@ $user_id = $_SESSION['user_id'] ?? '';
           -webkit-text-fill-color: transparent;
       }
 
-      /* RESTORED BIO STYLING */
       .description-side p {
           font-size: 1rem; 
           color: #aaa; 
@@ -110,13 +117,13 @@ $user_id = $_SESSION['user_id'] ?? '';
       .resume-btn:hover { background: rgba(255, 94, 58, 0.1); box-shadow: 0 0 15px var(--neon-glow); transform: translateY(-3px); }
       .contact-btn:hover { box-shadow: 0 0 20px var(--neon-glow); filter: brightness(1.1); transform: translateY(-3px); }
 
-      /* --- SERVICE CARDS (PURPLE TEXT FIXED) --- */
+      /* --- SERVICE CARDS --- */
       .services-grid {
           display: flex; width: 100%; height: 60vh; padding: 20px 8%; gap: 15px;
           animation: fadeInUp 1s ease forwards; animation-delay: 0.3s; opacity: 0;
       }
 
-      .service-card, .service-card:visited {
+      .service-card {
           position: relative; flex: 1; overflow: hidden; display: flex; align-items: flex-end;
           padding: 40px; text-decoration: none; transition: var(--transition);
           border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); background: var(--card-bg);
@@ -169,7 +176,7 @@ $user_id = $_SESSION['user_id'] ?? '';
 <body>
 
 <canvas id="canvas-bg"></canvas>
-<div class="transition-swipe"></div>
+<div class="transition-swipe" style="left: 0;"></div>
 
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {showSuccess();}"></iframe>
 
@@ -214,23 +221,41 @@ $user_id = $_SESSION['user_id'] ?? '';
 <script>
    let submitted = false;
 
-   // SUCCESS FEEDBACK
+   // 1. HANDLE PAGE SHOW (Fixes the Back Button Bug)
+   window.addEventListener('pageshow', (e) => {
+       const swipe = document.querySelector('.transition-swipe');
+       
+       // On initial load or back button, slide the bar out to the right
+       setTimeout(() => {
+           swipe.style.left = '100%';
+       }, 100);
+
+       // Reset if coming back from cache
+       if (e.persisted) {
+           swipe.style.transition = 'none';
+           swipe.style.left = '100%';
+           swipe.offsetHeight; // trigger reflow
+           swipe.style.transition = 'left 0.6s cubic-bezier(0.77, 0, 0.175, 1)';
+       }
+   });
+
+   // 2. SUCCESS FEEDBACK
    function showSuccess() {
       const btn = document.getElementById('submitText');
       btn.innerText = "SUCCESS";
       btn.style.color = "#00ff88";
       btn.style.borderColor = "#00ff88";
       setTimeout(() => {
-         document.getElementById('contactModal').style.display = 'none';
-         btn.innerText = "SEND";
-         btn.style.color = "var(--primary-orange)";
-         btn.style.borderColor = "var(--primary-orange)";
-         document.querySelector('form').reset();
-         submitted = false;
+          document.getElementById('contactModal').style.display = 'none';
+          btn.innerText = "SEND";
+          btn.style.color = "var(--primary-orange)";
+          btn.style.borderColor = "var(--primary-orange)";
+          document.querySelector('form').reset();
+          submitted = false;
       }, 2000);
    }
 
-   // RESTORED ADVANCED ANIMATED CANVAS
+   // 3. ANIMATED CANVAS
    const canvas = document.getElementById('canvas-bg');
    const ctx = canvas.getContext('2d');
    let particles = [];
@@ -242,20 +267,20 @@ $user_id = $_SESSION['user_id'] ?? '';
 
    class Particle {
       constructor() {
-         this.x = Math.random() * canvas.width;
-         this.y = Math.random() * canvas.height;
-         this.size = Math.random() * 2 + 1;
-         this.speedX = Math.random() * 0.4 - 0.2;
-         this.speedY = Math.random() * 0.4 - 0.2;
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = Math.random() * 0.4 - 0.2;
+          this.speedY = Math.random() * 0.4 - 0.2;
       }
       update() {
-         this.x += this.speedX; this.y += this.speedY;
-         if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-         if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+          this.x += this.speedX; this.y += this.speedY;
+          if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+          if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
       }
       draw() {
-         ctx.fillStyle = 'rgba(255, 94, 58, 0.4)';
-         ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255, 94, 58, 0.4)';
+          ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
       }
    }
 
@@ -267,16 +292,16 @@ $user_id = $_SESSION['user_id'] ?? '';
    function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p, index) => {
-         p.update(); p.draw();
-         for (let j = index; j < particles.length; j++) {
-            const dx = p.x - particles[j].x; const dy = p.y - particles[j].y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < 120) {
-               ctx.strokeStyle = `rgba(255, 94, 58, ${0.3 - distance/400})`;
-               ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y);
-               ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
-            }
-         }
+          p.update(); p.draw();
+          for (let j = index; j < particles.length; j++) {
+             const dx = p.x - particles[j].x; const dy = p.y - particles[j].y;
+             const distance = Math.sqrt(dx * dx + dy * dy);
+             if (distance < 120) {
+                ctx.strokeStyle = `rgba(255, 94, 58, ${0.3 - distance/400})`;
+                ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y);
+                ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+             }
+          }
       });
       requestAnimationFrame(animate);
    }
@@ -284,13 +309,21 @@ $user_id = $_SESSION['user_id'] ?? '';
    window.addEventListener('resize', () => { initCanvas(); createParticles(); });
    initCanvas(); createParticles(); animate();
 
-   // TRANSITIONS
+   // 4. LINK TRANSITIONS (Exit Animation)
    document.querySelectorAll('.transition-link').forEach(link => {
       link.addEventListener('click', function(e) {
-         e.preventDefault();
-         const target = this.getAttribute('href');
-         document.querySelector('.transition-swipe').style.left = '0';
-         setTimeout(() => { window.location.href = target; }, 500);
+          e.preventDefault();
+          const target = this.getAttribute('href');
+          const swipe = document.querySelector('.transition-swipe');
+          
+          // Reset to left and slide in to cover screen
+          swipe.style.transition = 'none';
+          swipe.style.left = '-100%';
+          swipe.offsetHeight; 
+          swipe.style.transition = 'left 0.5s cubic-bezier(0.77, 0, 0.175, 1)';
+          swipe.style.left = '0';
+          
+          setTimeout(() => { window.location.href = target; }, 500);
       });
    });
 </script>
