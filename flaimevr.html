@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAIMEVR | Firefighting Simulation</title>
+    <title>FLAIMEVR | Award Winning Firefighting Simulation</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
@@ -13,9 +13,9 @@
             --fire-red: #d32f2f;
             --brand-orange: #ff5e3a; 
             --caution-yellow: #ffeb3b;
+            --award-gold: #ffd700;
             --smoke-dark: #1a1a1b;
             --asphalt: #2c3e50;
-            --steel-light: #e0e0e0;
             --steel: #ecf0f1;
             --hazard-stripes: repeating-linear-gradient(45deg, #ffeb3b, #ffeb3b 10px, #000 10px, #000 20px);
         }
@@ -37,8 +37,20 @@
             pointer-events: none;
         }
         body.page-loaded #entrance-shutter { transform: translateX(-100%); }
-        body.page-exiting #entrance-shutter { transform: translateX(100%); transition: none; }
-        body.trigger-wipe #entrance-shutter { transform: translateX(0); transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
+
+        /* --- AWARD RIBBON --- */
+        .award-banner {
+            background: linear-gradient(90deg, #b8860b, var(--award-gold), #b8860b);
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            font-family: 'Bebas Neue';
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 10;
+        }
 
         /* --- HERO SECTION --- */
         .hero {
@@ -108,25 +120,13 @@
         .tech-item { display: flex; align-items: center; gap: 12px; }
         .tech-item i { color: var(--brand-orange); font-size: 1.8rem; }
 
-        /* --- COLLABORATORS (CONTRAST FIX) --- */
-        .collaborators {
-            background: var(--steel-light); 
-            padding: 60px 10%; display: flex; flex-direction: column; align-items: center;
-            border-top: 6px solid var(--caution-yellow);
-            border-bottom: 6px solid var(--fire-red);
-            position: relative;
+        /* --- SOCIAL RECOGNITION --- */
+        .recognition-section { padding: 80px 10%; display: flex; flex-direction: column; align-items: center; }
+        .fb-wrapper { 
+            background: #fff; padding: 15px; border-radius: 12px; 
+            max-width: 550px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-top: 30px;
         }
-        .collaborators span { 
-            font-family: 'Bebas Neue'; color: #333; 
-            margin-bottom: 30px; letter-spacing: 3px; font-size: 1.3rem; 
-        }
-        .logo-flex { display: flex; gap: 80px; align-items: center; justify-content: center; flex-wrap: wrap; }
-        .collab-logo { 
-            height: 80px; width: auto; 
-            filter: grayscale(100%); /* Keeps them neutral black */
-            transition: 0.4s ease; opacity: 0.9; 
-        }
-        .collab-logo:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
 
         /* --- CONTENT SECTIONS --- */
         section { padding: 80px 10%; }
@@ -138,6 +138,11 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative;
         }
         .overview-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hazard-stripes); }
+        
+        .winner-photo { 
+            width: 100%; height: auto; border-radius: 4px; border: 3px solid var(--award-gold); 
+            margin-bottom: 30px; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.2));
+        }
 
         /* --- PIPELINE ZIGZAG --- */
         .info-row { display: flex; align-items: stretch; margin-bottom: 40px; background: #222; border: 1px solid #444; overflow: hidden; }
@@ -146,20 +151,6 @@
         .info-row:hover .info-image { filter: grayscale(0%); }
         .info-content { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
         .info-content h3 { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--brand-orange); margin-bottom: 15px; }
-
-        /* --- TRAILER & GALLERY --- */
-        .trailer-section { background: #111; padding: 80px 10%; text-align: center; }
-        .video-wrapper {
-            max-width: 1000px; margin: 0 auto; background: #000; padding: 12px; 
-            border: 5px solid var(--fire-red); border-radius: 15px;
-        }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
-        .ss-card { border: 2px solid #333; overflow: hidden; transition: 0.4s; aspect-ratio: 16/9; }
-        .ss-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: 0.5s; }
-        .ss-card:hover img { transform: scale(1.1); }
 
         #backToTop {
             position: fixed; bottom: 30px; right: 30px;
@@ -179,11 +170,14 @@
 </head>
 <body>
 
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0"></script>
+
 <div id="entrance-shutter"></div>
 <div id="backToTop"><i class="fas fa-arrow-up"></i></div>
 
 <nav class="nav-top">
-   <a href="project.html" class="btn-nav transition-link">
+   <a href="project.html" class="btn-nav">
       <i class="fas fa-arrow-left"></i> RETURN TO PORTFOLIO
    </a>
 </nav>
@@ -194,30 +188,41 @@
    <p>Firefighting Simulation & Training</p>
    <div class="hero-nav">
       <a href="#about" class="btn-hero"><i class="fas fa-bullhorn"></i> MISSION</a>
+      <a href="#recognition" class="btn-hero"><i class="fas fa-trophy"></i> AWARDS</a>
       <a href="#technical" class="btn-hero"><i class="fas fa-microchip"></i> PIPELINE</a>
-      <a href="#trailer" class="btn-hero"><i class="fas fa-play"></i> TRAILER</a>
       <a href="#gallery" class="btn-hero"><i class="fas fa-layer-group"></i> GALLERY</a>
    </div>
 </section>
 
+<div class="award-banner">
+    <i class="fas fa-trophy"></i> MAIN AWARD WINNER: AR/VR CATEGORY - DICE 3.0 <i class="fas fa-trophy"></i>
+</div>
+
 <div class="tech-bar">
     <div class="tech-item"><i class="fab fa-unity"></i><span>UNITY URP</span></div>
     <div class="tech-item"><i class="fas fa-vr-cardboard"></i><span>META QUEST 3</span></div>
-    <div class="tech-item"><i class="fas fa-code"></i><span>C# MODULAR SYSTEMS</span></div>
-</div>
-
-<div class="collaborators">
-    <span>OFFICIAL COLLABORATORS</span>
-    <div class="logo-flex">
-        <img src="images/dicelogo.png" alt="UTHM" class="collab-logo">
-        <img src="images/bombalogo.png" alt="BOMBA" class="collab-logo">
-    </div>
+    <div class="tech-item"><i class="fas fa-robot"></i><span>GEMINI AI API</span></div>
 </div>
 
 <section id="about" class="reveal">
     <div class="overview-card">
+        <img src="images/dice_winner_moment.png" alt="DICE 3.0 Victory" class="winner-photo">
+        
         <h2 style="font-family: 'Bebas Neue'; font-size: 3.5rem; color: var(--caution-yellow); margin-bottom: 20px;">Tactical Simulation</h2>
-        <p><b>FLAIMEVR</b> is an immersive virtual reality simulation that integrates hands-on firefighting operations with real-time strategic (RTS) decision-making to provide a realistic and educational experience in fire management. Designed as both a training tool and an engaging game, FlaimeVR challenges players to manage resources, deploy firefighting units, and adapt to dynamic environmental conditions. Players experience diverse scenarios—from containing small-scale house fires to controlling fast-spreading wildfires and managing complex industrial emergencies—while facing hazards such as chemical explosions and shifting wind patterns. The inclusion of AI-driven environmental data enhances situational awareness by providing real-time updates on fire behaviour, weather conditions, and operational consequences. This combination of realistic VR immersion, strategic resource management, and AI-assisted decision support creates a unique platform for developing crisis management, leadership, and problem-solving skills.</p>
+        <p><b>FLAIMEVR</b> is an immersive virtual reality simulation that integrates hands-on firefighting operations with real-time strategic (RTS) decision-making. 
+        As a recipient of the <b>Main Award at DICE 3.0</b>, this project was recognized for its innovative use of AI-driven environmental data and modular XR systems. 
+        The simulation challenges players to manage resources, deploy units, and adapt to dynamic fires using real-time assistance from an integrated Gemini AI assistant.</p>
+    </div>
+</section>
+
+<section id="recognition" class="recognition-section reveal">
+    <h2 class="ref-heading">Official Recognition</h2>
+    <div class="fb-wrapper">
+        <div class="fb-post" 
+             data-href="https://www.facebook.com/share/p/1BKbVzCwXD/" 
+             data-width="auto" 
+             data-show-text="true">
+        </div>
     </div>
 </section>
 
@@ -225,64 +230,43 @@
    <h2 class="ref-heading">Development Pipeline</h2>
    
    <div class="info-row">
-      <img src="images/blenderfvr.png" class="info-image">
+      <img src="images/blenderfvr.png" class="info-image" alt="3D Modeling">
       <div class="info-content">
          <h3>01. 3D Modelling</h3>
-         <p>Comprehensive environmental and model 3D asset creation using Blender. Focusing on making the model as accurate as possible with real life equipment.</p>
+         <p>Comprehensive environmental and model 3D asset creation using Blender, ensuring high fidelity for real-life firefighting equipment.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/unityfvr.png" class="info-image">
+      <img src="images/fvr6.png" class="info-image" alt="AI Logic">
       <div class="info-content">
-         <h3>02. Unity development</h3>
-         <p>Developed within the Unity Universal Render Pipeline (URP). Features include custom HLSL shaders and a modular C# event system for XR integration.</p>
+         <h3>02. AI Integration</h3>
+         <p>Utilizing the <b>Gemini API</b>, the system features an intelligent assistant that provides real-time strategic feedback and fire behavior analysis.</p>
       </div>
    </div>
 
    <div class="info-row">
-      <img src="images/fvr6.png" class="info-image">
+      <img src="images/unityfvr.png" class="info-image" alt="Unity Dev">
       <div class="info-content">
-         <h3>03. AI Integration</h3>
-         <p>Using Gemini as an API, the system includes an AI assistant to provide real-time guidance and feedback within the training environment.</p>
+         <h3>03. Unity Development</h3>
+         <p>Built on URP with custom HLSL shaders and a modular C# event system for seamless Quest 3 performance.</p>
       </div>
-   </div>
-
-   <div class="info-row">
-      <img src="images/vscfvr.png" class="info-image">
-      <div class="info-content">
-         <h3>04. Programming Logic</h3>
-         <p>Clean, documented C# code structure designed for modularity and scalability using Visual Studio Code and Unity's event-driven architecture.</p>
-      </div>
-   </div>
-</section>
-
-<section id="trailer" class="trailer-section">
-   <h2 class="ref-heading">Official Teaser</h2>
-   <div class="video-wrapper">
-       <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/RyI5T8c0ZgU" frameborder="0" allowfullscreen></iframe>
-       </div>
    </div>
 </section>
 
 <section id="gallery" class="reveal">
    <h2 class="ref-heading">System Gallery</h2>
-   <div class="screenshot-grid">
-      <div class="ss-card"><img src="images/fvr1.png"></div>
-      <div class="ss-card"><img src="images/fvr2.png"></div>
-      <div class="ss-card"><img src="images/fvr3.png"></div>
-      <div class="ss-card"><img src="images/fvr4.png"></div>
-      <div class="ss-card"><img src="images/fvr5.png"></div>
-      <div class="ss-card"><img src="images/fvr6.png"></div>
-      <div class="ss-card"><img src="images/fvr7.png"></div>
-      <div class="ss-card"><img src="images/fvr8.png"></div>
+   <div class="screenshot-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+      <div class="ss-card" style="border: 2px solid #333; overflow: hidden; aspect-ratio: 16/9;"><img src="images/fvr1.png" style="width:100%; height:100%; object-fit:cover;"></div>
+      <div class="ss-card" style="border: 2px solid #333; overflow: hidden; aspect-ratio: 16/9;"><img src="images/fvr2.png" style="width:100%; height:100%; object-fit:cover;"></div>
+      <div class="ss-card" style="border: 2px solid #333; overflow: hidden; aspect-ratio: 16/9;"><img src="images/fvr3.png" style="width:100%; height:100%; object-fit:cover;"></div>
+      <div class="ss-card" style="border: 2px solid #333; overflow: hidden; aspect-ratio: 16/9;"><img src="images/fvr4.png" style="width:100%; height:100%; object-fit:cover;"></div>
    </div>
 </section>
 
 <footer>
    <div class="hazard-line"></div>
-   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | Nabil Hakimi</p>
+   <p style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 2px;">FLAIMEVR | Awarded Project by Nabil Hakimi</p>
 </footer>
 
 <script>
@@ -303,19 +287,6 @@
    window.addEventListener('DOMContentLoaded', () => {
       initFire();
       setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
-
-      document.querySelectorAll('.transition-link').forEach(link => {
-          link.addEventListener('click', function(e) {
-              e.preventDefault();
-              const target = this.getAttribute('href');
-              document.body.classList.remove('page-loaded');
-              document.body.classList.add('page-exiting');
-              setTimeout(() => {
-                document.body.classList.add('trigger-wipe');
-                setTimeout(() => { window.location.href = target; }, 600);
-              }, 50);
-          });
-      });
 
       const btt = document.getElementById('backToTop');
       window.addEventListener('scroll', () => {
